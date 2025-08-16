@@ -3,14 +3,14 @@
 namespace App\Service\Impl;
 
 use App\Service\AuthService;
+use Auth;
 
 class AuthServiceImpl implements AuthService
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
+    public function login($username, $password):bool{
+        return Auth::attempt([
+            "username" => $username,
+            "password" => $password
+        ]);
     }
 }

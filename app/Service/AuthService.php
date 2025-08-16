@@ -5,5 +5,5 @@ use PhpParser\Builder\Interface_;
 
 interface AuthService
 {
-    //
+    function login (string $username, string $password): bool;
 }
