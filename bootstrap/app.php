@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // login validasi
+        $middleware->append(\App\Http\Middleware\OnlyGuestMiddleware::class);
+        $middleware->append(\App\Http\Middleware\OnlyMemberMiddleware::class);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

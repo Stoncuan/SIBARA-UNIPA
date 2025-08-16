@@ -176,6 +176,33 @@
         </div>
     </section>
 
+     <!-- user data list -->
+    <section class="py-5">
+        <div class="container">
+            <div class="card table-card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-list-alt me-2"></i>Data list user</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="userTable" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Username</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Borrow Modal -->
     <div class="modal fade" id="borrowModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -244,6 +271,8 @@
             </div>
         </div>
     </div>
+
+    
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -316,8 +345,8 @@ const items = [
         description:
             "Tablet dengan layar 10.9 inch, chip A14 Bionic. Ideal untuk design dan presentasi mobile.",
         image: "https://placehold.co/400x300",
-        total: 6,
-        available: 4,
+        total: 20,
+        available: 0,
         category: "Elektronik",
     },
 ];
@@ -344,7 +373,7 @@ const myBorrowedItems = [
 const allBorrowedItems = [
     {
         id: 1,
-        itemName: "Laptop Dell Inspiron 15",
+        itemName: "Laptop test Inspiron 15",
         borrower: "John Doe",
         borrowDate: "2024-01-15",
         returnDate: "2024-01-25",
@@ -376,6 +405,14 @@ const allBorrowedItems = [
         borrowDate: "2024-01-14",
         returnDate: "2024-01-24",
         status: "Dipinjam",
+        statusClass: "warning",
+    },
+];
+
+const user = [
+    {
+        id: 1,
+        username: "Tono",
         statusClass: "warning",
     },
 ];
@@ -540,6 +577,44 @@ function initializeTables() {
             url: "//cdn.datatables.net/plug-ins/1.13.5/i18n/id.json",
         },
     });
+
+    // All Borrowed Items Table
+    const userTable = $("#userTable").DataTable({
+        data: user,
+        columns: [
+            {
+                data: null,
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+            },
+            { data: "username" },
+            
+            {
+                data: null,
+                render: function (data, type, row) {
+                    let buttons = "";
+                                           
+                    buttons += `<button class="btn btn-sm btn-info me-1" onclick="viewDetailsUser(${row.id})">
+                                           <i class="fas fa-eye me-1"></i>Detail
+                                        </button>`;
+
+                    buttons += `<button type="button" class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                               <i class="fas fa-check me-1"></i>Edit
+                                            </button>`;
+
+                    buttons += `<button class="btn btn-sm btn-danger me-1" onclick="adminReturnItemHapus(${row.id})">
+                                               <i class="fas fa-trash me-1"></i>Hapus
+                                            </button>`;
+                    return buttons;
+                },
+            },
+        ],
+        responsive: true,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.5/i18n/id.json",
+        },
+    });
 }
 
 // Open borrow modal
@@ -649,9 +724,41 @@ function returnItem(itemId) {
     });
 }
 
+// Hapus
+function returnItemHapus(itemId) {
+    Swal.fire({
+        title: "Anda ingin menghapus user?",
+        text: "Apakah Anda yakin ingin menghapus user?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Ya, Kembalikan",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Simulate API call
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: "User berhasil terhapus",
+                confirmButtonColor: "#007bff",
+            }).then(() => {
+                // Update tables and stats
+                updateStats();
+                $("#myBorrowedTable").DataTable().ajax.reload();
+            });
+        }
+    });
+}
+
 // Admin return item
 function adminReturnItem(itemId) {
     returnItem(itemId);
+}
+
+function adminReturnItemHapus(itemId) {
+    returnItemHapus(itemId);
 }
 
 // View details
@@ -668,6 +775,22 @@ function viewDetails(itemId) {
                         <p><strong>Tanggal Pinjam:</strong> 15 Januari 2024</p>
                         <p><strong>Tanggal Kembali:</strong> 25 Januari 2024</p>
                         <p><strong>Status:</strong> <span class="badge bg-warning">Dipinjam</span></p>
+                    </div>
+                `,
+        confirmButtonColor: "#007bff",
+    });
+}
+
+// View details
+function viewDetailsUser(itemId) {
+    Swal.fire({
+        title: "Detail User",
+        html: `
+                    <div class="text-start">
+                        <p><strong>ID:</strong> ${itemId}</p>
+                        <p><strong>Username:</strong> Tono</p>
+                        <p><strong>Peminjam:</strong> John Doe</p>
+                        <p><strong>Created at</strong> 25 Januari 2024</p>
                     </div>
                 `,
         confirmButtonColor: "#007bff",
@@ -744,6 +867,50 @@ document.getElementById("borrowQty").addEventListener("input", function () {
     }
 });
 </script>
+
+
+<!-- Modal edit user -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+     <form>
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="username">
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="password">
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                <label class="form-check-label" for="checkDefault">
+                    Default checkbox
+                </label>
+                </div>
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked>
+                <label class="form-check-label" for="checkChecked">
+                    Checked checkbox
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>
 
