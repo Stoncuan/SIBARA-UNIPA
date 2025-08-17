@@ -5,5 +5,5 @@ use PhpParser\Builder\Interface_;
 
 interface UserService
 {
-    //
+    
 }

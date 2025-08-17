@@ -2,6 +2,7 @@
 
 namespace App\Service\Impl;
 
+use App\Models\User;
 use App\Service\AuthService;
 use Auth;
 
@@ -13,4 +14,8 @@ class AuthServiceImpl implements AuthService
             "password" => $password
         ]);
     }
+
+    
+
+
 }

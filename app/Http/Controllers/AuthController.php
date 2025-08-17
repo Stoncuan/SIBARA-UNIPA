@@ -26,5 +26,25 @@ class AuthController extends Controller
         ]);
 
         $username = $validasiLogin['username'];
+        $password = $validasiLogin['password'];
+
+        if($this->authService->login($username, $password)){
+            $request->session()->put("username", $username);
+            return redirect("/");
+        }
+
+        return response()->view("Auth.login", [
+            "title" => "Login Peminjaman Barang UPA TIK UNIPA",
+            "message" => "Username atau password salah"
+        ]);
+    }
+
+    public function doLogout(Request $request){
+        $request->session()->forget("username");
+
+        return response()->view("Auth.login", [
+            "title" => "Halaman Login",
+            "message" => "Anda sudah logout"
+        ]);
     }
 }
