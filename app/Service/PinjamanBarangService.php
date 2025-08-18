@@ -15,7 +15,22 @@ interface PinjamanBarangService
         string $status_barang
     );
 
+    public function updatePinjamBarang(
+        string $id,
+        string $nama_barang,
+        string $keperluan_barang,
+        int $total_pinjam,
+        string $tanggal_pinjam_barang,
+        string $tanggal_barang_kembali,
+        string $nama_penanggung_jawab,
+        string $status_barang
+    );
+
+    public function deletePinjaman(int $id);
+
     public function getPinjamanByUser();
 
     public function getAllPinjaman();
+
+    public function getTotalPinjaman();
 }
