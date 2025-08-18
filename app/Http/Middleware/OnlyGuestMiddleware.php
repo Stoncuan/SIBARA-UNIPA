@@ -15,6 +15,11 @@ class OnlyGuestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if ($request->session()->exists("username")) {
+            return redirect("/");
+        } else {
+            return $next($request);
+        }
+
     }
 }

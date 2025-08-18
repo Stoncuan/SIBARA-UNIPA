@@ -15,11 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-        ]);
 
-        // login validasi
-        $middleware->append(\App\Http\Middleware\OnlyGuestMiddleware::class);
-        $middleware->append(\App\Http\Middleware\OnlyMemberMiddleware::class);
+            // login validasi
+            'only_guest' => \App\Http\Middleware\OnlyGuestMiddleware::class,
+            'only_member' => \App\Http\Middleware\OnlyMemberMiddleware::class,
+        ]);
 
     })
     ->withExceptions(function (Exceptions $exceptions) {

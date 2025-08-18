@@ -18,8 +18,7 @@ class Barang extends Model
         "penjelasan_barang",
         "gambar_barang",
         "total_barang",
-        "barang_tersedia",
-        "total_peminjaman"
+        "barang_tersedia"
     ];
 
 }

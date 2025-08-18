@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_barang', 255);
             $table->text('keperluan_barang');
+            $table->integer('total_pinjam');
             $table->string('tanggal_pinjam_barang', 100);
             $table->string('tanggal_barang_kembali', 100)->nullable(true);
             $table->string('nama_penanggung_jawab');

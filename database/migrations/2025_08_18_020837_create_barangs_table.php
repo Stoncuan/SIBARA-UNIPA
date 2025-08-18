@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('gambar_barang', 255);
             $table->integer('total_barang');
             $table->integer('barang_tersedia');
-            $table->integer('total_peminjaman');
             $table->timestamps();
         });
     }

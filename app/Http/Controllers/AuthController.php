@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Service\AuthService;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -14,7 +15,7 @@ class AuthController extends Controller
     }
 
     public function login(){
-        return response()->view("auth.login", [
+        return Response()->view("auth.login", [
             "title" => "Login Peminjaman Barang UPA TIK UNIPA"
         ]);
     }
@@ -33,7 +34,7 @@ class AuthController extends Controller
             return redirect("/");
         }
 
-        return response()->view("Auth.login", [
+        return response()->view("auth.login", [
             "title" => "Login Peminjaman Barang UPA TIK UNIPA",
             "message" => "Username atau password salah"
         ]);
@@ -42,7 +43,7 @@ class AuthController extends Controller
     public function doLogout(Request $request){
         $request->session()->forget("username");
 
-        return response()->view("Auth.login", [
+        return response()->view("auth.login", [
             "title" => "Halaman Login",
             "message" => "Anda sudah logout"
         ]);

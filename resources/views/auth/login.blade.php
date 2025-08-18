@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Login Page</title>
+    <title>{{ $title }}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -533,13 +533,13 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h1>Welcome Back!</h1>
-                <p>Please sign in to your account</p>
+                <h1>UPA TIK UNIPA</h1>
+                <p>Peminjaman barang UPA TIK UNIPA</p>
             </div>
 
-            <form id="loginForm">
+            <form id="loginForm" method="post" >
                 <div class="form-group">
-                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <input type="text" id="email" class="form-input" placeholder="Enter your username" required>
                     <i class="fas fa-envelope input-icon"></i>
                 </div>
 
@@ -549,35 +549,19 @@
                     <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 </div>
 
-                <div class="forgot-password">
-                    <a href="#" id="forgotPassword">Forgot Password?</a>
-                </div>
+               
 
-                <button type="submit" class="login-btn" id="loginBtn">
+                <button type="submit" class="login-btn mt-5" id="loginBtn">
                     <div class="loading" id="loading"></div>
                     <div class="success-check" id="successCheck"></div>
-                    <span id="btnText">Sign In</span>
+                    <span id="btnText">Login</span>
                 </button>
             </form>
 
-            <div class="divider">
-                <span>Or continue with</span>
-            </div>
-
-            <div class="social-login">
-                <button class="social-btn google" id="googleLogin">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button class="social-btn facebook" id="facebookLogin">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-                <button class="social-btn twitter" id="twitterLogin">
-                    <i class="fab fa-twitter"></i>
-                </button>
-            </div>
+            
 
             <div class="signup-link">
-                <p>Don't have an account? <a href="#" id="signupLink">Sign up</a></p>
+                <p>UPA TIK UNIPA</p>
             </div>
         </div>
     </div>
@@ -636,17 +620,14 @@
             function validateInput(input) {
                 const value = input.value.trim();
                 
-                if (input.type === 'email') {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (value && emailRegex.test(value)) {
+                if (input.type === 'text') {
+                    
+                    if (value) {
                         input.classList.add('success');
                         input.classList.remove('error');
-                    } else if (value) {
-                        input.classList.add('error');
-                        input.classList.remove('success');
-                    }
+                    } 
                 } else if (input.type === 'password' || input.type === 'text') {
-                    if (value.length >= 6) {
+                    if (value.length >= 2) {
                         input.classList.add('success');
                         input.classList.remove('error');
                     } else if (value) {
@@ -761,9 +742,9 @@
             // Add typing effect for placeholder
             function addTypingEffect() {
                 const texts = [
-                    'Enter your email',
-                    'your.email@example.com',
-                    'user@domain.com'
+                    'Enter your username',
+                    'your username',
+                    'Username'
                 ];
                 let currentText = 0;
                 let currentChar = 0;
