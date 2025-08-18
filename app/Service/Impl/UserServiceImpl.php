@@ -46,4 +46,8 @@ class UserServiceImpl implements UserService
             $user->delete();
         }
     }
+
+    public function getUserSession(){
+        return Auth::user();
+    }
 }
