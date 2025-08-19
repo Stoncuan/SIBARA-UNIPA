@@ -62,13 +62,12 @@ class BarangServiceImpl implements BarangService
     }
 
     public function totalBarang(){
-        return Barang::query()->get('total_barang')->count();
+        return Barang::query()->sum('total_barang');
     }
 
-
     public function totalBarangTersedia(){
-        $barangPinjam = pinjaman_barang::query()->get('total_pinjam')->count();
-        $barang = Barang::query()->get('total_barang')->count();
+        $barangPinjam = pinjaman_barang::query()->sum('total_pinjam');
+        $barang = Barang::query()->sum('total_barang');
         return $barang - $barangPinjam;
     }
 }

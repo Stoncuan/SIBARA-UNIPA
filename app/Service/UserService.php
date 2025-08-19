@@ -16,4 +16,6 @@ interface UserService
     public function deleteUser(int $id);
 
     public function getUserSession();
+
+    public function getUserByUsername($username);
 }

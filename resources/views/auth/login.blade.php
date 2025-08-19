@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,26 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .alert-danger {
+            background-color: rgba(242, 222, 222, 0.5);
+            /* Merah transparan */
+            border-color: rgba(235, 204, 209, 0.5);
+            /* Batas merah transparan */
         }
 
         body {
@@ -85,10 +105,13 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0px) rotate(0deg);
                 opacity: 0.3;
             }
+
             50% {
                 transform: translateY(-20px) rotate(180deg);
                 opacity: 0.6;
@@ -151,6 +174,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -177,6 +201,7 @@
                 opacity: 1;
                 transform: translateX(0);
             }
+
             from {
                 opacity: 0;
                 transform: translateX(-20px);
@@ -211,7 +236,7 @@
             transition: all 0.3s ease;
         }
 
-        .form-input:focus + .input-icon {
+        .form-input:focus+.input-icon {
             color: #667eea;
             transform: translateY(-50%) scale(1.1);
         }
@@ -255,6 +280,7 @@
                 opacity: 0;
                 transform: translateX(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -284,7 +310,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
 
@@ -306,6 +332,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -340,6 +367,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -436,8 +464,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Success Animation */
@@ -457,9 +490,19 @@
 
         /* Error Shake Animation */
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         .shake {
@@ -500,9 +543,17 @@
         }
 
         @keyframes pulse-error {
-            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
         }
 
         .form-input.success {
@@ -511,12 +562,21 @@
         }
 
         @keyframes pulse-success {
-            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(39, 174, 96, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Animated Background -->
     <div class="bg-animation">
@@ -532,24 +592,41 @@
     <!-- Login Container -->
     <div class="login-container">
         <div class="login-card">
+
             <div class="login-header">
                 <h1>UPA TIK UNIPA</h1>
+                @if (isset($messageLogin))
+                    <div class="row">
+                        <div class="alert alert-danger mb-3" style="text-align: center;" role="alert">
+                            {{ $messageLogin }}
+                        </div>
+                    </div>
+                @endif
                 <p>Peminjaman barang UPA TIK UNIPA</p>
             </div>
 
-            <form id="loginForm" method="post" >
+            <form method="post" action="/login">
+                @csrf
                 <div class="form-group">
-                    <input type="text" id="email" class="form-input" placeholder="Enter your username" required>
+                    <input type="text" id="email" class="form-input @error('username') is-invalid @enderror"
+                        placeholder="Enter your username" name="username">
                     <i class="fas fa-envelope input-icon"></i>
+                    @error('username')
+                        <div id="email" class="form-text" style="color: red;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group">
-                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                    <input type="password" id="password" class="form-input @error('password') is-invalid @enderror"
+                        placeholder="Enter your password" name="password">
                     <i class="fas fa-lock input-icon"></i>
                     <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    @error('password')
+                        <div id="password" class="form-text" style="color: red;">{{ $message }}</div>
+                    @enderror
                 </div>
 
-               
+
 
                 <button type="submit" class="login-btn mt-5" id="loginBtn">
                     <div class="loading" id="loading"></div>
@@ -558,7 +635,7 @@
                 </button>
             </form>
 
-            
+
 
             <div class="signup-link">
                 <p>UPA TIK UNIPA</p>
@@ -567,7 +644,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Elements
             const loginForm = document.getElementById('loginForm');
             const emailInput = document.getElementById('email');
@@ -584,10 +661,10 @@
             const twitterLogin = document.getElementById('twitterLogin');
 
             // Password Toggle
-            togglePassword.addEventListener('click', function() {
+            togglePassword.addEventListener('click', function () {
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
-                
+
                 if (type === 'password') {
                     togglePassword.classList.remove('fa-eye-slash');
                     togglePassword.classList.add('fa-eye');
@@ -600,16 +677,16 @@
             // Input Focus Effects
             const inputs = document.querySelectorAll('.form-input');
             inputs.forEach(input => {
-                input.addEventListener('focus', function() {
+                input.addEventListener('focus', function () {
                     this.parentElement.style.transform = 'scale(1.02)';
                 });
 
-                input.addEventListener('blur', function() {
+                input.addEventListener('blur', function () {
                     this.parentElement.style.transform = 'scale(1)';
                     validateInput(this);
                 });
 
-                input.addEventListener('input', function() {
+                input.addEventListener('input', function () {
                     if (this.classList.contains('error')) {
                         this.classList.remove('error');
                     }
@@ -619,13 +696,13 @@
             // Input Validation
             function validateInput(input) {
                 const value = input.value.trim();
-                
+
                 if (input.type === 'text') {
-                    
+
                     if (value) {
                         input.classList.add('success');
                         input.classList.remove('error');
-                    } 
+                    }
                 } else if (input.type === 'password' || input.type === 'text') {
                     if (value.length >= 2) {
                         input.classList.add('success');
@@ -638,43 +715,43 @@
             }
 
             // Form Submission
-            loginForm.addEventListener('submit', function(e) {
+            loginForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                
+
                 const email = emailInput.value.trim();
                 const password = passwordInput.value.trim();
-                
+
                 // Validation
                 let isValid = true;
-                
+
                 if (!email) {
                     emailInput.classList.add('error');
                     emailInput.parentElement.classList.add('shake');
                     setTimeout(() => emailInput.parentElement.classList.remove('shake'), 500);
                     isValid = false;
                 }
-                
+
                 if (!password) {
                     passwordInput.classList.add('error');
                     passwordInput.parentElement.classList.add('shake');
                     setTimeout(() => passwordInput.parentElement.classList.remove('shake'), 500);
                     isValid = false;
                 }
-                
+
                 if (!isValid) {
                     return;
                 }
-                
+
                 // Simulate login process
                 loginBtn.disabled = true;
                 loading.style.display = 'inline-block';
                 btnText.textContent = 'Signing In...';
-                
+
                 setTimeout(() => {
                     loading.style.display = 'none';
                     successCheck.style.display = 'inline-block';
                     btnText.textContent = 'Success!';
-                    
+
                     // Simulate redirect after success
                     setTimeout(() => {
                         alert('Login successful! Welcome back!');
@@ -691,7 +768,7 @@
             });
 
             // Social Login Handlers
-            googleLogin.addEventListener('click', function() {
+            googleLogin.addEventListener('click', function () {
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = 'scale(1)';
@@ -699,7 +776,7 @@
                 }, 150);
             });
 
-            facebookLogin.addEventListener('click', function() {
+            facebookLogin.addEventListener('click', function () {
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = 'scale(1)';
@@ -707,7 +784,7 @@
                 }, 150);
             });
 
-            twitterLogin.addEventListener('click', function() {
+            twitterLogin.addEventListener('click', function () {
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = 'scale(1)';
@@ -716,26 +793,26 @@
             });
 
             // Forgot Password
-            forgotPassword.addEventListener('click', function(e) {
+            forgotPassword.addEventListener('click', function (e) {
                 e.preventDefault();
                 alert('Password reset functionality would be implemented here.');
             });
 
             // Sign Up Link
-            signupLink.addEventListener('click', function(e) {
+            signupLink.addEventListener('click', function (e) {
                 e.preventDefault();
                 alert('Sign up page would be loaded here.');
             });
 
             // Add floating animation to login card on mouse move
-            document.addEventListener('mousemove', function(e) {
+            document.addEventListener('mousemove', function (e) {
                 const loginCard = document.querySelector('.login-card');
                 const { clientX, clientY } = e;
                 const { innerWidth, innerHeight } = window;
-                
+
                 const xPos = (clientX / innerWidth - 0.5) * 10;
                 const yPos = (clientY / innerHeight - 0.5) * 10;
-                
+
                 loginCard.style.transform = `translateX(${xPos}px) translateY(${yPos}px)`;
             });
 
@@ -752,7 +829,7 @@
 
                 function type() {
                     const current = texts[currentText];
-                    
+
                     if (isDeleting) {
                         emailInput.placeholder = current.substring(0, currentChar - 1);
                         currentChar--;
@@ -778,7 +855,7 @@
             addTypingEffect();
 
             // Add particle effect on button hover
-            loginBtn.addEventListener('mouseenter', function() {
+            loginBtn.addEventListener('mouseenter', function () {
                 for (let i = 0; i < 6; i++) {
                     setTimeout(() => {
                         createParticle(this);
@@ -795,13 +872,13 @@
                 particle.style.borderRadius = '50%';
                 particle.style.pointerEvents = 'none';
                 particle.style.zIndex = '1000';
-                
+
                 const rect = element.getBoundingClientRect();
                 particle.style.left = (rect.left + Math.random() * rect.width) + 'px';
                 particle.style.top = rect.top + 'px';
-                
+
                 document.body.appendChild(particle);
-                
+
                 const animation = particle.animate([
                     { transform: 'translateY(0px)', opacity: 1 },
                     { transform: 'translateY(-50px)', opacity: 0 }
@@ -809,28 +886,28 @@
                     duration: 1000,
                     easing: 'ease-out'
                 });
-                
+
                 animation.onfinish = () => {
                     particle.remove();
                 };
             }
 
             // Add keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.ctrlKey && e.key === 'Enter') {
                     loginForm.dispatchEvent(new Event('submit'));
                 }
             });
 
             // Add focus management
-            emailInput.addEventListener('keydown', function(e) {
+            emailInput.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     passwordInput.focus();
                 }
             });
 
-            passwordInput.addEventListener('keydown', function(e) {
+            passwordInput.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     loginForm.dispatchEvent(new Event('submit'));
@@ -839,5 +916,5 @@
         });
     </script>
 </body>
-</html>
 
+</html>

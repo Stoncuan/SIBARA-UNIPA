@@ -22,7 +22,15 @@
     <link rel="stylesheet" href="{{ asset('template') }}/css/style.css">
 </head>
 
-<body>
+@if ($class && $stlye)
+    {{ $class = "modal-open" }}
+    {{ $stlye = "overflow: hidden; padding-right: 15px;" }}
+@else
+    {{ $class="" }}
+    {{ $stlye="" }}
+@endif
+
+<body class="{{ $class }}" style="{{ $stlye }}">
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -44,8 +52,24 @@
                             <i class="fas fa-user-circle fa-2x"></i>
                         </div>
                         <div>
-                            <h6 class="mb-0">Admin User</h6>
-                            <small>Administrator</small>
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        {{ $userSession['username'] }}
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <form method="post" action="/logout">
+                                            @csrf
+                                            <li><button class="dropdown-item btn btn-warning" href="#">Logout</button>
+                                            </li>
+                                        </form>
+
+                                        <li><a class="dropdown-item" href="#">Update</a></li>
+
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -76,7 +100,7 @@
                         <div class="stat-icon" style="background: var(--primary-color);">
                             <i class="fas fa-boxes"></i>
                         </div>
-                        <div class="stat-number text-primary" id="totalBarang">250</div>
+                        <div class="stat-number text-primary" id="totalBarang">{{ $totalBarang }}</div>
                         <div class="text-muted">Total Barang</div>
                     </div>
                 </div>
@@ -85,7 +109,7 @@
                         <div class="stat-icon" style="background: var(--warning-color);">
                             <i class="fas fa-hand-holding"></i>
                         </div>
-                        <div class="stat-number text-warning" id="barangDipinjam">45</div>
+                        <div class="stat-number text-warning" id="barangDipinjam">{{ $totalBarangPinjam }}</div>
                         <div class="text-muted">Barang Dipinjam</div>
                     </div>
                 </div>
@@ -94,7 +118,7 @@
                         <div class="stat-icon" style="background: var(--success-color);">
                             <i class="fas fa-check-circle"></i>
                         </div>
-                        <div class="stat-number text-success" id="barangDikembalikan">205</div>
+                        <div class="stat-number text-success" id="barangDikembalikan">{{ $totalBarangTersedia }}</div>
                         <div class="text-muted">Barang Tersedia</div>
                     </div>
                 </div>
@@ -109,6 +133,89 @@
             <div class="row mb-4">
                 <div class="col-12">
                     <h2 class="text-center mb-4">Daftar Barang Tersedia</h2>
+                </div>
+                <div class="col-12">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahBarang">
+                        Tambah Barang
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="tambahBarang" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="/tambah-barang" method="post">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Barang</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="nama_barang" class="form-label"></label>
+                                            <input type="text"
+                                                class="form-control @error('nama_barang') is-invalid @enderror"
+                                                id="nama_barang" placeholder="nama barang" name="nama_barang">
+                                            @error('nama_barang')
+                                                <div id="nama_barang" class="form-text" style="color: red;">{{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="total_barang" class="form-label"></label>
+                                            <input type="text"
+                                                class="form-control @error('total_barang') is-invalid @enderror"
+                                                id="total_barang" placeholder="total barang" name="total_barang">
+                                            @error('total_barang')
+                                                <div id="total_barang" class="form-text" style="color: red;">{{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+
+                                        <div class="mb-3">
+                                            <label for="barang_tersedia" class="form-label"></label>
+                                            <input type="text"
+                                                class="form-control @error('barang_tersedia') is-invalid @enderror"
+                                                id="barang_tersedia" placeholder="barang tersedia"
+                                                name="barang_tersedia">
+                                            @error('barang_tersedia')
+                                                <div id="barang_tersedia" class="form-text" style="color: red;">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+
+                                        <div class="mb-3">
+                                            <label for="penjelasan_barang"
+                                                class="form-label @error('penjelasan_barang') is-invalid @enderror">
+                                                Karakteristik barang</label>
+                                            <textarea class="form-control" id="penjelasan_barang" rows="3"></textarea>
+                                            @error('penjelasan_barang')
+                                                <div id="penjelasan_barang" class="form-text" style="color: red;">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="formFile" class="form-label">Default file input example</label>
+                                            <input class="form-control" type="file" id="formFile">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Tambah</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row g-4" id="itemsContainer">
@@ -291,66 +398,18 @@
 
     <script>// Sample data
         const items = [
-            {
-                id: 1,
-                name: "Laptop Dell Inspiron 15",
-                description:
-                    "Laptop dengan spesifikasi Intel i5, RAM 8GB, SSD 256GB. Cocok untuk kebutuhan office dan programming.",
-                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/85f5d0e3-b2ce-4318-adc2-bb40ca0694eb.png",
-                total: 10,
-                available: 7,
-                category: "Elektronik",
-            },
-            {
-                id: 2,
-                name: "Proyektor Epson EB-X41",
-                description:
-                    "Proyektor dengan resolusi XGA 1024x768, brightness 3600 lumens. Ideal untuk presentasi dan meeting.",
-                image: "https://placehold.co/400x300",
-                total: 5,
-                available: 3,
-                category: "Elektronik",
-            },
-            {
-                id: 3,
-                name: "Kamera DSLR Canon EOS 700D",
-                description:
-                    "Kamera DSLR dengan sensor APS-C 18MP, video Full HD. Lengkap dengan lensa kit 18-55mm.",
-                image: "https://placehold.co/400x300",
-                total: 3,
-                available: 2,
-                category: "Fotografi",
-            },
-            {
-                id: 4,
-                name: "Printer HP LaserJet Pro",
-                description:
-                    "Printer laser monochrome dengan kecepatan cetak 22 ppm. Hemat dan efisien untuk dokumen.",
-                image: "https://placehold.co/400x300",
-                total: 8,
-                available: 6,
-                category: "Elektronik",
-            },
-            {
-                id: 5,
-                name: "Microphone Audio Technica",
-                description:
-                    "Microphone condenser dengan kualitas studio. Perfect untuk recording dan streaming.",
-                image: "https://placehold.co/400x300",
-                total: 4,
-                available: 4,
-                category: "Audio",
-            },
-            {
-                id: 6,
-                name: "Tablet iPad Air",
-                description:
-                    "Tablet dengan layar 10.9 inch, chip A14 Bionic. Ideal untuk design dan presentasi mobile.",
-                image: "https://placehold.co/400x300",
-                total: 20,
-                available: 0,
-                category: "Elektronik",
-            },
+            @foreach ($barang as $b)
+                                        {
+                    id: {{ $b['id'] }},
+                    name: @json($b['nama_barang']),
+                    description: @json($b['penjelasan_barang']),
+                    image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/85f5d0e3-b2ce-4318-adc2-bb40ca0694eb.png",
+                    total: {{ $b['total_barang'] }},
+                    available: {{ $b['barang_tersedia'] }},
+                    category: "all"
+                }@if(!$loop->last), @endif
+            @endforeach
+            
         ];
 
         const myBorrowedItems = [

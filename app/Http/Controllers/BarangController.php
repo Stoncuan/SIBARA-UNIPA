@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Service\BarangService;
+use App\Service\PinjamanBarangService;
+use App\Service\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\FilesystemAdapter;
 
 class BarangController extends Controller
 {
     private BarangService $barangService;
+    private PinjamanBarangService $pinjamanBarangService;
+    private UserService $userService;
 
-    public function __construct(BarangService $barangService)
+    public function __construct(BarangService $barangService, UserService $userService, PinjamanBarangService $pinjamanBarangService)
     {
         $this->barangService = $barangService;
+        $this->pinjamanBarangService = $pinjamanBarangService;
+        $this->userService = $userService;
     }
 
     public function homeBarang()
@@ -21,13 +28,36 @@ class BarangController extends Controller
         $barang = $this->barangService->getAllBarang();
         $totalBarang = $this->barangService->totalBarang();
         $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
 
         return response()->view('home_peminjaman.peminjaman_barang', [
             "title" => "Peminjaman Barang UPA TIK",
             "totalBarang" => $totalBarang,
             "barang" => $barang,
-            "totalBarangTersedia" => $totalBarangTersedia
+            "totalBarangTersedia" => $totalBarangTersedia,
+            "totalBarangPinjam" => $totalBarangPinjam,
+            "user" => $user,
+            "userSession" => $userSession
         ]);
+    }
+
+    public function viewGambarBarang($path)
+    {
+         // pastikan file ada
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        // ambil full path file di storage
+        $fullPath = Storage::disk('local')->path($path);
+
+        $fullPath = Storage::disk('local')->path($path);
+        return response()->file($fullPath);
+
+        // kalau mau langsung download, gunakan ini:
+        // return response()->download($fullPath, basename($path));
     }
 
     public function createBarang(Request $request)
@@ -63,12 +93,20 @@ class BarangController extends Controller
         $barang = $this->barangService->getAllBarang();
         $totalBarang = $this->barangService->totalBarang();
         $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Data barang berhasil ditambahkan');
         return redirect('/peminjaman-barang')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
-            ->with('totalBarangTersedia', $totalBarangTersedia);
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession)
+            ->with('class', true)
+            ->with('style', true);
     }
 
     public function updateBarang(Request $request)
@@ -115,26 +153,38 @@ class BarangController extends Controller
         $barang = $this->barangService->getAllBarang();
         $totalBarang = $this->barangService->totalBarang();
         $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Data barang berhasil di rubah');
         return redirect('/peminjaman-barang')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
-            ->with('totalBarangTersedia', $totalBarangTersedia);
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
     }
 
-    public function deleteBarang(Request $request, int $id)
+    public function deleteBarang(Request $request, $id)
     {
         $this->barangService->deleteBarang($id);
 
         $barang = $this->barangService->getAllBarang();
         $totalBarang = $this->barangService->totalBarang();
         $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Data barang berhasil dihapus');
         return redirect('/peminjaman-barang')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
-            ->with('totalBarangTersedia', $totalBarangTersedia);
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
     }
 }

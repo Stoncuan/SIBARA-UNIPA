@@ -13,6 +13,13 @@ Route::controller(\App\Http\Controllers\AuthController::class)->group(function (
 
 Route::controller(\App\Http\Controllers\BarangController::class)
 ->middleware('only_member')->group(function () {
+    Route::get('/gambar-barang/{path}',  'viewGambarBarang')
+    ->where('path', '.*'); 
+    
     Route::get('/peminjaman-barang', 'homeBarang');
+
+    Route::post('/tambah-barang', 'createBarang');
 });
+
+
 

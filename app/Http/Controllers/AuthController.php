@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         return response()->view("auth.login", [
             "title" => "Login Peminjaman Barang UPA TIK UNIPA",
-            "message" => "Username atau password salah"
+            "messageLogin" => "Username atau password salah"
         ]);
     }
 

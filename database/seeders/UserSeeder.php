@@ -16,15 +16,15 @@ class UserSeeder extends Seeder
         $user = new User();
         $user->name = "devtik@unipa.ac.id";
         $user->username = "devtik@unipa.ac.id";
-        $user->password = bcrypt("TikUni!p@");
+        $user->password = bcrypt("123123");
         $user->save();
-        $user->assignRole('admin');
+        // $user->assignRole('admin');
 
-        $user1 = new User();
-        $user1->name = "user";
-        $user1->username = "user";
-        $user1->password = bcrypt("Unipa123");
-        $user1->save();
-        $user1->assignRole('user');
+        // $user1 = new User();
+        // $user1->name = "user";
+        // $user1->username = "user";
+        // $user1->password = bcrypt("Unipa123");
+        // $user1->save();
+        // $user1->assignRole('user');
     }
 }
