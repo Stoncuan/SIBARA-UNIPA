@@ -20,17 +20,22 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('template') }}/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-@if ($class && $stlye)
-    {{ $class = "modal-open" }}
-    {{ $stlye = "overflow: hidden; padding-right: 15px;" }}
-@else
-    {{ $class="" }}
-    {{ $stlye="" }}
-@endif
 
-<body class="{{ $class }}" style="{{ $stlye }}">
+<body>
+    @if (Session::has('message'))
+        <script>
+            Swal.fire({
+                title: 'Sukses',
+                text: "{{ Session::get('message') }}",
+                icon: 'success',
+                confirmButtonText: 'Oke'
+            });
+        </script>
+    @endif
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -140,12 +145,23 @@
                         Tambah Barang
                     </button>
 
+
+                    @if ($errors->any())
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                var myModal = new bootstrap.Modal(document.getElementById('tambahBarang'));
+                                myModal.show();
+                            });
+                        </script>
+                    @endif
+
+
                     <!-- Modal -->
                     <div class="modal fade" id="tambahBarang" data-bs-backdrop="static" data-bs-keyboard="false"
                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="/tambah-barang" method="post">
+                                <form action="/tambah-barang" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Barang</h1>
@@ -191,10 +207,11 @@
 
 
                                         <div class="mb-3">
-                                            <label for="penjelasan_barang"
-                                                class="form-label @error('penjelasan_barang') is-invalid @enderror">
+                                            <label for="penjelasan_barang" class="form-label">
                                                 Karakteristik barang</label>
-                                            <textarea class="form-control" id="penjelasan_barang" rows="3"></textarea>
+                                            <textarea
+                                                class="form-control @error('penjelasan_barang') is-invalid @enderror"
+                                                id="penjelasan_barang" rows="3" name="penjelasan_barang"></textarea>
                                             @error('penjelasan_barang')
                                                 <div id="penjelasan_barang" class="form-text" style="color: red;">
                                                     {{ $message }}
@@ -203,8 +220,14 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="formFile" class="form-label">Default file input example</label>
-                                            <input class="form-control" type="file" id="formFile">
+                                            <label for="gambar_barang" class="form-label">Gambar barang</label>
+                                            <input class="form-control @error('gambar_barang') is-invalid @enderror"
+                                                name="gambar_barang" type="file" id="gambar_barang">
+                                            @error('gambar_barang')
+                                                <div id="gambar_barang" class="form-text" style="color: red;">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -326,7 +349,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Barang</label>
-                                    <input type="text" class="form-control" id="itemName" readonly>
+                                    <input type="text" class="form-control" id="namaBarang" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -340,7 +363,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Peminjam</label>
-                                    <input type="text" class="form-control" id="borrowerName" required>
+                                    <input type="text" class="form-control" id="borrowerName" value="" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -353,8 +376,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Tanggal Pinjam</label>
-                                    <input type="date" class="form-control" id="borrowDate" required>
+                                    <label class="form-label">Status</label>
+                                    <input type="text" class="form-control"  required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -381,6 +404,65 @@
         </div>
     </div>
 
+    <!-- Borrow Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-hand-holding me-2"></i>Form Edit Barang</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="borrowForm" method="" action="">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Barang</label>
+                                    <input type="text" class="form-control" id="editNamaBarang" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jumlah Tersedia</label>
+                                    <input type="text" class="form-control" id="editJumlahTersedia"  readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jumlah Barang</label>
+                                    <input type="text" class="form-control" id="editJumlahBarang" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Gambar Barang</label>
+                                    <input type="file" class="form-control" id="editJumlahBarang" required>
+                                </div>
+                            </div>
+
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label class="form-label">Penjelasa Barang</label>
+                            <textarea class="form-control" id="editPenjelasan" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-gradient" onclick="submitBorrow()">
+                        <span class="submit-text">Edit Barang</span>
+                        <span class="loading d-none"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Bootstrap JS -->
@@ -399,7 +481,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                        {
+                                                                {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -536,6 +618,18 @@
                         : "Tidak Tersedia"
                     }
                                 </button>
+                                
+                                <form action="/hapus-barang/${item.id}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger w-100 mt-2">
+                                    <i class="fas fa-hand-holding me-2"></i>
+                                    Hapus Barang</button>
+                                </form>
+
+                            
+                                <button class="btn btn-warning w-100 mt-2" onclick="editBorrowModal(${item.id})"  >
+                                <i class="fas fa-hand-holding me-2"></i>
+                                Edit Barang</button>
                             </div>
                         </div>
                     </div>
@@ -674,7 +768,7 @@
         function openBorrowModal(itemId) {
             const item = items.find((i) => i.id === itemId);
             if (item) {
-                document.getElementById("itemName").value = item.name;
+                document.getElementById("namaBarang").value = item.name;
                 document.getElementById("availableQty").value = item.available;
                 document.getElementById("borrowQty").max = item.available;
 
@@ -685,6 +779,25 @@
 
                 // Store item ID for form submission
                 document.getElementById("borrowForm").dataset.itemId = itemId;
+            }
+        }
+
+        function editBorrowModal(itemId) {
+            const item = items.find((i) => i.id === itemId);
+            if (item) {
+                 
+                document.getElementById("editNamaBarang").value = item.name;
+                document.getElementById("editJumlahBarang").value = item.total;
+                document.getElementById("editJumlahTersedia").value = item.available;
+                document.getElementById("editPenjelasan").value = item.description;
+
+                const modal = new bootstrap.Modal(
+                    document.getElementById("editModal")
+                );
+                modal.show();
+
+                // // Store item ID for form submission
+                // document.getElementById("borrowForm").dataset.itemId = itemId;
             }
         }
 

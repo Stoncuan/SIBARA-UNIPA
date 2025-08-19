@@ -65,14 +65,14 @@ class BarangController extends Controller
         $validasiBarang = $request->validate([
             'nama_barang' => 'required',
             'penjelasan_barang' => 'required',
-            'gambar_barang' => 'required',
+            'gambar_barang' => 'required|file|mimes:jpeg,png,jpg|max:8000',
             'total_barang' => 'required',
             'barang_tersedia' => 'required',
         ]);
 
         $nama_barang = $validasiBarang['nama_barang'];
         $penjelasan_barang = $validasiBarang['penjelasan_barang'];
-        $gambar_barang = $validasiBarang['gambar_barang'];
+        $gambar_barang = $request->file('gambar_barang');
         $total_barang = $validasiBarang['total_barang'];
         $barang_tersedia = $validasiBarang['barang_tersedia'];
 
@@ -104,9 +104,7 @@ class BarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
-            ->with('userSession', $userSession)
-            ->with('class', true)
-            ->with('style', true);
+            ->with('userSession', $userSession);
     }
 
     public function updateBarang(Request $request)

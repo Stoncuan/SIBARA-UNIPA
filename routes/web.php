@@ -19,6 +19,7 @@ Route::controller(\App\Http\Controllers\BarangController::class)
     Route::get('/peminjaman-barang', 'homeBarang');
 
     Route::post('/tambah-barang', 'createBarang');
+    Route::post('/hapus-barang/{id}', 'deleteBarang');
 });
 
 
