@@ -62,7 +62,8 @@ class BarangController extends Controller
 
     public function createBarang(Request $request)
     {
-        $validasiBarang = $request->validate([
+        // validasi erronya custom
+        $validasiBarang = $request->validateWithBag('tambahBarang', [
             'nama_barang' => 'required',
             'penjelasan_barang' => 'required',
             'gambar_barang' => 'required|file|mimes:jpeg,png,jpg|max:8000',
@@ -109,7 +110,7 @@ class BarangController extends Controller
 
     public function updateBarang(Request $request)
     {
-        $validasiBarang = $request->validate([
+        $validasiBarang = $request->validateWithBag("editBarang", [
             'id' => 'required',
             'nama_barang' => 'required',
             'penjelasan_barang' => 'required',

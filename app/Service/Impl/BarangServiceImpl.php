@@ -10,7 +10,7 @@ use Storage;
 class BarangServiceImpl implements BarangService
 {
     public function getAllBarang(){
-        return Barang::query()->paginate(15);
+        return Barang::query()->orderBy('id', 'desc')->paginate(15);
     }
     public function createBarang(
         string $nama_barang, 
@@ -54,7 +54,7 @@ class BarangServiceImpl implements BarangService
     public function deleteBarang(int $id){
         $barang = Barang::query()->find($id);
         if($barang['gambar_barang'] != null){
-            Storage::disk('local')->delete($barang['gambar_barang']);
+            Storage::disk('local')->delete('gambar_barang/'.$barang['gambar_barang']);
         }
         if($barang != null){
             $barang->delete();

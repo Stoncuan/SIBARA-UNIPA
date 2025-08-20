@@ -146,14 +146,15 @@
                     </button>
 
 
-                    @if ($errors->any())
+                    @if ($errors->tambahBarang->any())
                         <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                var myModal = new bootstrap.Modal(document.getElementById('tambahBarang'));
-                                myModal.show();
-                            });
+                            window.onload = function () {
+                                var modal = new bootstrap.Modal(document.getElementById('tambahBarang'));
+                                modal.show();
+                            };
                         </script>
                     @endif
+
 
 
                     <!-- Modal -->
@@ -172,9 +173,9 @@
                                         <div class="mb-3">
                                             <label for="nama_barang" class="form-label"></label>
                                             <input type="text"
-                                                class="form-control @error('nama_barang') is-invalid @enderror"
+                                                class="form-control @error('nama_barang', 'tambahBarang') is-invalid @enderror"
                                                 id="nama_barang" placeholder="nama barang" name="nama_barang">
-                                            @error('nama_barang')
+                                            @error('nama_barang', 'tambahBarang')
                                                 <div id="nama_barang" class="form-text" style="color: red;">{{ $message }}
                                                 </div>
                                             @enderror
@@ -183,9 +184,9 @@
                                         <div class="mb-3">
                                             <label for="total_barang" class="form-label"></label>
                                             <input type="text"
-                                                class="form-control @error('total_barang') is-invalid @enderror"
+                                                class="form-control @error('total_barang', 'tambahBarang') is-invalid @enderror"
                                                 id="total_barang" placeholder="total barang" name="total_barang">
-                                            @error('total_barang')
+                                            @error('total_barang', 'tambahBarang')
                                                 <div id="total_barang" class="form-text" style="color: red;">{{ $message }}
                                                 </div>
                                             @enderror
@@ -195,10 +196,10 @@
                                         <div class="mb-3">
                                             <label for="barang_tersedia" class="form-label"></label>
                                             <input type="text"
-                                                class="form-control @error('barang_tersedia') is-invalid @enderror"
+                                                class="form-control @error('barang_tersedia', 'tambahBarang') is-invalid @enderror"
                                                 id="barang_tersedia" placeholder="barang tersedia"
                                                 name="barang_tersedia">
-                                            @error('barang_tersedia')
+                                            @error('barang_tersedia', 'tambahBarang')
                                                 <div id="barang_tersedia" class="form-text" style="color: red;">
                                                     {{ $message }}
                                                 </div>
@@ -210,9 +211,9 @@
                                             <label for="penjelasan_barang" class="form-label">
                                                 Karakteristik barang</label>
                                             <textarea
-                                                class="form-control @error('penjelasan_barang') is-invalid @enderror"
+                                                class="form-control @error('penjelasan_barang', 'tambahBarang') is-invalid @enderror"
                                                 id="penjelasan_barang" rows="3" name="penjelasan_barang"></textarea>
-                                            @error('penjelasan_barang')
+                                            @error('penjelasan_barang', 'tambahBarang')
                                                 <div id="penjelasan_barang" class="form-text" style="color: red;">
                                                     {{ $message }}
                                                 </div>
@@ -221,9 +222,10 @@
 
                                         <div class="mb-3">
                                             <label for="gambar_barang" class="form-label">Gambar barang</label>
-                                            <input class="form-control @error('gambar_barang') is-invalid @enderror"
+                                            <input
+                                                class="form-control @error('gambar_barang', 'tambahBarang') is-invalid @enderror"
                                                 name="gambar_barang" type="file" id="gambar_barang">
-                                            @error('gambar_barang')
+                                            @error('gambar_barang', 'tambahBarang')
                                                 <div id="gambar_barang" class="form-text" style="color: red;">
                                                     {{ $message }}
                                                 </div>
@@ -241,10 +243,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12">
+                    {{ $barang->links() }}
+                </div>
+            </div>
             <div class="row g-4" id="itemsContainer">
                 <!-- Items will be populated by JavaScript -->
+
             </div>
+
         </div>
+
     </section>
 
     <!-- My Borrowed Items Table -->
@@ -335,6 +345,15 @@
         </div>
     </section>
 
+    @if ($errors->tambahPinjam->any())
+        <script>
+            window.onload = function () {
+                var modal = new bootstrap.Modal(document.getElementById('borrowModal'));
+                modal.show();
+            };
+        </script>
+    @endif
+
     <!-- Borrow Modal -->
     <div class="modal fade" id="borrowModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -344,12 +363,20 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="borrowForm">
+                    <form id="borrowForm" action="/pinjam-barang" method="post">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Barang</label>
-                                    <input type="text" class="form-control" id="namaBarang" readonly>
+                                    <input type="text"
+                                        class="form-control @error('nama_barang', 'tambahPinjam') is-invalid @enderror"
+                                        id="namaBarang" name="nama_barang">
+                                    @error('nama_barang', 'tambahPinjam')
+                                        <div id="nama_barang" class="form-text" style="color: red;">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -363,46 +390,74 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Peminjam</label>
-                                    <input type="text" class="form-control" id="borrowerName" value="" readonly>
+                                    <input type="text" class="form-control" id="borrowerName"
+                                        value="{{ $userSession['username'] }}" name="nama_penanggung_jawab" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jumlah Pinjam</label>
-                                    <input type="number" class="form-control" id="borrowQty" min="1" required>
+                                    <input type="number"
+                                        class="form-control @error('total_pinjam', 'tambahPinjam') is-invalid @enderror"
+                                        id="borrowQty" name="total_pinjam" min="1">
+                                    @error('total_pinjam', 'tambahPinjam')
+                                        <div id="total_pinjam" class="form-text" style="color: red;">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <div class="mb-3">
-                                    <label class="form-label">Status</label>
-                                    <input type="text" class="form-control"  required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Tanggal Kembali</label>
-                                    <input type="date" class="form-control" id="returnDate" required>
+                                    <label class="form-label">Tanggal pinjam</label>
+                                    <input type="date" 
+                                        class="form-control @error('tanggal_pinjam_barang', 'tambahPinjam') is-invalid @enderror"
+                                        id="returnDate" name="tanggal_pinjam_barang">
+                                    @error('tanggal_pinjam_barang', 'tambahPinjam')
+                                        <div id="tanggal_pinjam_barang" class="form-text" style="color: red;">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Keperluan</label>
-                            <textarea class="form-control" id="purpose" rows="3" required></textarea>
+                            <textarea
+                                class="form-control @error('keperluan_barang', 'tambahPinjam') is-invalid @enderror"
+                                name="keperluan_barang" id="purpose" rows="3"></textarea>
+                            @error('keperluan_barang', 'tambahPinjam')
+                                <div id="keperluan_barang" class="form-text" style="color: red;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                    </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-gradient" onclick="submitBorrow()">
+                    <button type="submit" class="btn btn-gradient">
                         <span class="submit-text">Pinjam Barang</span>
                         <span class="loading d-none"></span>
                     </button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+
+    @if ($errors->editBarang->any())
+        <script>
+            window.onload = function () {
+                var modal = new bootstrap.Modal(document.getElementById('editModal'));
+                modal.show();
+            };
+        </script>
+    @endif
+
+
 
     <!-- Borrow Modal -->
     <div class="modal fade" id="editModal" tabindex="-1">
@@ -413,19 +468,43 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="borrowForm" method="" action="">
+                    <form action="/edit-barang" method="post" enctype="multipart/form-data">
+
+                        @csrf
                         <div class="row">
+                            <div class="col-md-6" hidden>
+                                <div class="mb-3">
+                                    <label class="form-label">id</label>
+                                    <input type="text" class="form-control @error('id') is-invalid @enderror" name="id"
+                                        id="editId" readonly>
+                                    @error('id')
+                                        <div id="id" class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Barang</label>
-                                    <input type="text" class="form-control" id="editNamaBarang" readonly>
+                                    <input type="text"
+                                        class="form-control @error('nama_barang', 'editBarang') is-invalid @enderror"
+                                        id="editNamaBarang" name="nama_barang">
+
+                                    @error('nama_barang', 'editBarang')
+                                        <div id="nama_barang" class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jumlah Tersedia</label>
-                                    <input type="text" class="form-control" id="editJumlahTersedia"  readonly>
+                                    <input type="text"
+                                        class="form-control @error('barang_tersedia', 'editBarang') is-invalid @enderror"
+                                        id="editJumlahTersedia" name="barang_tersedia" value="barang_tersedia">
+
+                                    @error('barang_tersedia', 'editBarang')
+                                        <div id="barang_tersedia" class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -433,32 +512,48 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jumlah Barang</label>
-                                    <input type="text" class="form-control" id="editJumlahBarang" required>
+                                    <input type="text"
+                                        class="form-control @error('total_barang', 'editBarang') is-invalid @enderror"
+                                        id="editJumlahBarang" name="total_barang" required>
+                                    @error('total_barang', 'editBarang')
+                                        <div id="total_barang" class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Gambar Barang</label>
-                                    <input type="file" class="form-control" id="editJumlahBarang" required>
+                                    <input type="file"
+                                        class="form-control @error('gambar_barang', 'editBarang') is-invalid @enderror"
+                                        id="editJumlahBarang" name="gambar_barang">
+                                    @error('gambar_barang_edit', 'editBarang')
+                                        <div id="gambar_barang" class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                         </div>
-                    
+
                         <div class="mb-3">
-                            <label class="form-label">Penjelasa Barang</label>
-                            <textarea class="form-control" id="editPenjelasan" rows="3" required></textarea>
+                            <label class="form-label">Penjelasan Barang</label>
+                            <textarea
+                                class="form-control @error('penjelasan_barang', 'editBarang') is-invalid @enderror"
+                                id="editPenjelasan" name="penjelasan_barang" rows="3" required></textarea>
+                            @error('penjelasan_barang', 'editBarang')
+                                <div id="penjelasan_barang" class="form-text" style="color: red;">{{ $message }}</div>
+                            @enderror
                         </div>
-                    </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-gradient" onclick="submitBorrow()">
+                    <button type="submit" class="btn btn-gradient">
                         <span class="submit-text">Edit Barang</span>
                         <span class="loading d-none"></span>
                     </button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -481,7 +576,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                {
+                                                                                                                                                                            {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -785,11 +880,12 @@
         function editBorrowModal(itemId) {
             const item = items.find((i) => i.id === itemId);
             if (item) {
-                 
+
                 document.getElementById("editNamaBarang").value = item.name;
                 document.getElementById("editJumlahBarang").value = item.total;
                 document.getElementById("editJumlahTersedia").value = item.available;
                 document.getElementById("editPenjelasan").value = item.description;
+                document.getElementById("editId").value = item.id;
 
                 const modal = new bootstrap.Modal(
                     document.getElementById("editModal")

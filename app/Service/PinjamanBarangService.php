@@ -8,9 +8,8 @@ interface PinjamanBarangService
     public function pinjamBarang(
         string $nama_barang, 
         string $keperluan_barang,
-        int $total_pinjam,
+        $total_pinjam,
         string $tanggal_pinjam_barang,
-        string $tanggal_barang_kembali,
         string $nama_penanggung_jawab,
         string $status_barang
     );

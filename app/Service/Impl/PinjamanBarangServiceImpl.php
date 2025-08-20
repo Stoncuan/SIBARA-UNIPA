@@ -12,9 +12,8 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
     public function pinjamBarang(
         string $nama_barang, 
         string $keperluan_barang,
-        int $total_pinjam,
+        $total_pinjam,
         string $tanggal_pinjam_barang,
-        string $tanggal_barang_kembali,
         string $nama_penanggung_jawab,
         string $status_barang
     ){
@@ -22,8 +21,7 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
             "nama_barang" => $nama_barang,
             "keperluan_barang" => $keperluan_barang,
             "total_pinjam" => $total_pinjam,
-            "tanggal_pinjaman_barang" => $tanggal_pinjam_barang,
-            "tanggal_barang_kembali" => $tanggal_barang_kembali,
+            "tanggal_pinjam_barang" => $tanggal_pinjam_barang,
             "nama_penanggung_jawab" => $nama_penanggung_jawab,
             "status_barang" => $status_barang
         ]);
@@ -73,7 +71,7 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
     }
 
     public function getTotalPinjaman(){
-        return pinjaman_barang::query()->get('total_pinjam')->count();
+        return pinjaman_barang::query()->sum('total_pinjam');
     }
 
 }

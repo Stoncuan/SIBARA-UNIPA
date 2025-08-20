@@ -20,6 +20,12 @@ Route::controller(\App\Http\Controllers\BarangController::class)
 
     Route::post('/tambah-barang', 'createBarang');
     Route::post('/hapus-barang/{id}', 'deleteBarang');
+    Route::post('/edit-barang', 'updateBarang');
+});
+
+Route::controller(\App\Http\Controllers\PinjamanBarangController::class)
+->middleware('only_member')->group(function () {
+    Route::post('/pinjam-barang', 'createPinjaman');
 });
 
 

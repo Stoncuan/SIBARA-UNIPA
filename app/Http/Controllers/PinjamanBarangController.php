@@ -24,30 +24,30 @@ class PinjamanBarangController extends Controller
 
     public function createPinjaman(Request $request)
     {
-        $validasi = $request->validate([
+        $validasi = $request->validateWithBag("tambahPinjam", [
             'nama_barang' => 'required',
             'keperluan_barang' => 'required',
-            'total_pinjaman' => 'required',
+            'total_pinjam' => 'required',
             'tanggal_pinjam_barang' => 'required',
-            'tanggal_barang_kembali' => 'required',
             'nama_penanggung_jawab' => 'required',
-            'status_barang' => 'required'
         ]);
+
+        
 
         $nama_barang = $validasi['nama_barang'];
         $keperluan_barang = $validasi['keperluan_barang'];
-        $total_pinjaman = $validasi['total_pinjaman'];
+        $total_pinjam = $validasi['total_pinjam'];
         $tanggal_pinjam_barang = $validasi['tanggal_pinjam_barang'];
-        $tanggal_barang_kembali = $validasi['tanggal_barang_kembali'];
         $nama_penanggung_jawab = $validasi['nama_penanggung_jawab'];
-        $status_barang = $validasi['status_barang'];
+        $status_barang = "pinjam";
+
+        
 
         $this->pinjamanBarangService->pinjamBarang(
             $nama_barang,
             $keperluan_barang,
-            $total_pinjaman,
+            $total_pinjam,
             $tanggal_pinjam_barang,
-            $tanggal_barang_kembali,
             $nama_penanggung_jawab,
             $status_barang
         );
