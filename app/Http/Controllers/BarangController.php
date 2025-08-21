@@ -31,6 +31,8 @@ class BarangController extends Controller
         $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
+        $userPinjamBarang = $this->pinjamanBarangService->getPinjamanByUser();
+        $pinjamanBarangAll = $this->pinjamanBarangService->getAllPinjaman();
 
         return response()->view('home_peminjaman.peminjaman_barang', [
             "title" => "Peminjaman Barang UPA TIK",
@@ -39,7 +41,9 @@ class BarangController extends Controller
             "totalBarangTersedia" => $totalBarangTersedia,
             "totalBarangPinjam" => $totalBarangPinjam,
             "user" => $user,
-            "userSession" => $userSession
+            "userSession" => $userSession,
+            "userPinjamBarang" => $userPinjamBarang,
+            "pinjamanBarangAll" => $pinjamanBarangAll
         ]);
     }
 

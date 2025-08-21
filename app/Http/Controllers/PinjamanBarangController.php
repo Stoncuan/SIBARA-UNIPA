@@ -39,7 +39,7 @@ class PinjamanBarangController extends Controller
         $total_pinjam = $validasi['total_pinjam'];
         $tanggal_pinjam_barang = $validasi['tanggal_pinjam_barang'];
         $nama_penanggung_jawab = $validasi['nama_penanggung_jawab'];
-        $status_barang = "pinjam";
+        $status_barang = "Dipinjam";
 
         
 

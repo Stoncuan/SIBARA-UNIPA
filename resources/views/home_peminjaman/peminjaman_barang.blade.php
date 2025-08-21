@@ -412,7 +412,7 @@
                             <div class="col-md-8">
                                 <div class="mb-3">
                                     <label class="form-label">Tanggal pinjam</label>
-                                    <input type="date" 
+                                    <input type="date"
                                         class="form-control @error('tanggal_pinjam_barang', 'tambahPinjam') is-invalid @enderror"
                                         id="returnDate" name="tanggal_pinjam_barang">
                                     @error('tanggal_pinjam_barang', 'tambahPinjam')
@@ -576,7 +576,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                            {
+                                                                                                                                                                                    {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -590,69 +590,62 @@
         ];
 
         const myBorrowedItems = [
-            {
-                id: 1,
-                itemName: "Laptop Dell Inspiron 15",
-                borrowDate: "2024-01-15",
-                returnDate: "2024-01-25",
-                status: "Dipinjam",
-                statusClass: "warning",
-            },
-            {
-                id: 2,
-                itemName: "Proyektor Epson EB-X41",
-                borrowDate: "2024-01-10",
-                returnDate: "2024-01-20",
-                status: "Terlambat",
-                statusClass: "danger",
-            },
+            @foreach ($userPinjamBarang as $UP)
+
+                     {
+                    id: {{ $UP['id'] }},
+                    itemName: @json($UP['nama_barang']),
+                    borrowDate: "2024-01-15",
+                    @if($UP['tanggal_kembali_barang'] === null)
+                        returnDate: "Belum Kembali",
+                    @else
+                            returnDate: @json($UP['tanggal_kembali_barang']),
+                        @endif
+
+                status: @json($UP['status_barang']),
+                @if($UP['status_barang'] === 'Dipinjam')
+                    statusClass: "warning"
+                @else
+                        statusClass: "success"
+                    @endif
+                    },
+            @endforeach
+           
+           
         ];
 
         const allBorrowedItems = [
-            {
-                id: 1,
-                itemName: "Laptop test Inspiron 15",
-                borrower: "John Doe",
-                borrowDate: "2024-01-15",
-                returnDate: "2024-01-25",
-                status: "Dipinjam",
-                statusClass: "warning",
-            },
-            {
-                id: 2,
-                itemName: "Proyektor Epson EB-X41",
-                borrower: "Jane Smith",
-                borrowDate: "2024-01-10",
-                returnDate: "2024-01-20",
-                status: "Terlambat",
-                statusClass: "danger",
-            },
-            {
-                id: 3,
-                itemName: "Kamera DSLR Canon EOS 700D",
-                borrower: "Bob Wilson",
-                borrowDate: "2024-01-12",
-                returnDate: "2024-01-22",
-                status: "Dikembalikan",
-                statusClass: "success",
-            },
-            {
-                id: 4,
-                itemName: "Printer HP LaserJet Pro",
-                borrower: "Alice Brown",
-                borrowDate: "2024-01-14",
-                returnDate: "2024-01-24",
-                status: "Dipinjam",
-                statusClass: "warning",
-            },
+            @foreach ($pinjamanBarangAll as $pinjamAll)
+                     {
+                    id: {{ $pinjamAll['id'] }},
+                    itemName: @json($pinjamAll['nama_barang']),
+                    borrower: @json($pinjamAll['nama_penanggung_jawab']),
+                    borrowDate: @json($pinjamAll['tanggal_pinjam_barang']),
+                    @if($pinjamAll['tanggal_kembali_barang'] === null)
+                        returnDate: "Belum Kembali",
+                    @else
+                            returnDate: @json($pinjamAll['tanggal_kembali_barang']),
+                        @endif
+                status: @json($pinjamAll['status_barang']),
+                @if($pinjamAll['status_barang'] === 'Dipinjam')
+                    statusClass: "warning"
+                @else
+                        statusClass: "success"
+                    @endif
+                    },
+            @endforeach
+           
         ];
 
         const user = [
+            @foreach ($user as $u)
             {
-                id: 1,
-                username: "Tono",
+                id: {{ $u['id'] }},
+                username: @json($u['username']),
                 statusClass: "warning",
             },
+            @endforeach
+            
         ];
 
         // Initialize page

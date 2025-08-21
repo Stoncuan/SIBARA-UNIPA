@@ -24,6 +24,8 @@ interface BarangService
         int $barang_tersedia
     );
 
+    public function updateBarangTesedia($pinjam, $idBarang);
+
     public function getBarangById(int $id);
 
     public function deleteBarang(int $id);

@@ -51,6 +51,16 @@ class BarangServiceImpl implements BarangService
         return Barang::query()->find($id);
     }
 
+    public function updateBarangTesedia($pinjam, $idBarang){
+        $barang = Barang::query()->sum('total_barang');
+        $barangPinjam = $pinjam;
+        $barangTersedia = $barang - $barangPinjam;
+
+        $barangUpdate = Barang::queru()->find($idBarang);
+        $barangUpdate->baraang_tersedia = $barangTersedia;
+        $barangUpdate->save();
+    }
+
     public function deleteBarang(int $id){
         $barang = Barang::query()->find($id);
         if($barang['gambar_barang'] != null){
