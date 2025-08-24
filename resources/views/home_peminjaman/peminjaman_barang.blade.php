@@ -366,6 +366,7 @@
                     <form id="borrowForm" action="/pinjam-barang" method="post">
                         @csrf
                         <div class="row">
+                            <input hidden type="text" name="id" class="form-control" id="id" readonly>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama Barang</label>
@@ -576,7 +577,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                    {
+                                                                                                                                                                                        {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -592,7 +593,7 @@
         const myBorrowedItems = [
             @foreach ($userPinjamBarang as $UP)
 
-                     {
+                         {
                     id: {{ $UP['id'] }},
                     itemName: @json($UP['nama_barang']),
                     borrowDate: "2024-01-15",
@@ -608,7 +609,7 @@
                 @else
                         statusClass: "success"
                     @endif
-                    },
+                        },
             @endforeach
            
            
@@ -616,7 +617,7 @@
 
         const allBorrowedItems = [
             @foreach ($pinjamanBarangAll as $pinjamAll)
-                     {
+                         {
                     id: {{ $pinjamAll['id'] }},
                     itemName: @json($pinjamAll['nama_barang']),
                     borrower: @json($pinjamAll['nama_penanggung_jawab']),
@@ -632,18 +633,18 @@
                 @else
                         statusClass: "success"
                     @endif
-                    },
+                        },
             @endforeach
            
         ];
 
         const user = [
             @foreach ($user as $u)
-            {
-                id: {{ $u['id'] }},
-                username: @json($u['username']),
-                statusClass: "warning",
-            },
+                {
+                    id: {{ $u['id'] }},
+                    username: @json($u['username']),
+                    statusClass: "warning",
+                },
             @endforeach
             
         ];
@@ -857,6 +858,7 @@
             const item = items.find((i) => i.id === itemId);
             if (item) {
                 document.getElementById("namaBarang").value = item.name;
+                document.getElementById("id").value = item.id;
                 document.getElementById("availableQty").value = item.available;
                 document.getElementById("borrowQty").max = item.available;
 

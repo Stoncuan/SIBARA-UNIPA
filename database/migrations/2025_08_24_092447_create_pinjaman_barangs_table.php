@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('tanggal_barang_kembali', 100)->nullable(true);
             $table->string('nama_penanggung_jawab');
             $table->string('status_barang');
+            $table->integer('id_barang');
             $table->timestamps();
         });
     }

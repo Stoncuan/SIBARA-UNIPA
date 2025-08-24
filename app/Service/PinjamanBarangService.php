@@ -11,6 +11,12 @@ interface PinjamanBarangService
         $total_pinjam,
         string $tanggal_pinjam_barang,
         string $nama_penanggung_jawab,
+        string $status_barang,
+        $id_barang
+    );
+
+    public function kembalikanBarang(
+        int $id,
         string $status_barang
     );
 

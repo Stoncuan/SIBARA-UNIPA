@@ -30,6 +30,7 @@ class PinjamanBarangController extends Controller
             'total_pinjam' => 'required',
             'tanggal_pinjam_barang' => 'required',
             'nama_penanggung_jawab' => 'required',
+            'id' => 'required'
         ]);
 
         
@@ -40,6 +41,7 @@ class PinjamanBarangController extends Controller
         $tanggal_pinjam_barang = $validasi['tanggal_pinjam_barang'];
         $nama_penanggung_jawab = $validasi['nama_penanggung_jawab'];
         $status_barang = "Dipinjam";
+        $id = $validasi['id'];
 
         
 
@@ -49,7 +51,8 @@ class PinjamanBarangController extends Controller
             $total_pinjam,
             $tanggal_pinjam_barang,
             $nama_penanggung_jawab,
-            $status_barang
+            $status_barang,
+            $id,
         );
 
         $barang = $this->barangService->getAllBarang();

@@ -20,6 +20,7 @@ class pinjaman_barang extends Model
         "tanggal_pinjam_barang",
         "tanggal_barang_kembali",
         "nama_penanggung_jawab",
-        "status_barang"
+        "status_barang",
+        "id_barang",
     ];
 }

@@ -56,7 +56,7 @@ class BarangServiceImpl implements BarangService
         $barangPinjam = $pinjam;
         $barangTersedia = $barang - $barangPinjam;
 
-        $barangUpdate = Barang::queru()->find($idBarang);
+        $barangUpdate = Barang::query()->find($idBarang);
         $barangUpdate->baraang_tersedia = $barangTersedia;
         $barangUpdate->save();
     }

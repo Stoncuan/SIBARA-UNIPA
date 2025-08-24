@@ -15,7 +15,8 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
         $total_pinjam,
         string $tanggal_pinjam_barang,
         string $nama_penanggung_jawab,
-        string $status_barang
+        string $status_barang,
+        $id_barang
     ){
         $pinjamBarang = new pinjaman_barang([
             "nama_barang" => $nama_barang,
@@ -23,7 +24,8 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
             "total_pinjam" => $total_pinjam,
             "tanggal_pinjam_barang" => $tanggal_pinjam_barang,
             "nama_penanggung_jawab" => $nama_penanggung_jawab,
-            "status_barang" => $status_barang
+            "status_barang" => $status_barang,
+            "id_barang" => $id_barang
         ]);
 
         $pinjamBarang->save();
@@ -50,6 +52,16 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
 
         $pinjamBarang->save();
         
+    }
+
+    public function kembalikanBarang(
+        int $id,
+        string $status_barang
+    ){
+        $pinjamBarang = pinjaman_barang::query()->find($id);
+        $pinjamBarang->status_barang = $status_barang;
+
+        $pinjamBarang->save();
     }
 
     public function deletePinjaman(int $id){
