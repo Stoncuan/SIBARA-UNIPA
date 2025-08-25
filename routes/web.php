@@ -28,5 +28,14 @@ Route::controller(\App\Http\Controllers\PinjamanBarangController::class)
     Route::post('/pinjam-barang', 'createPinjaman');
 });
 
+Route::controller(\App\Http\Controllers\UserController::class)
+->middleware('only_member')->group(function () {
+    Route::post('/tambah-user', 'createUser');
+     Route::post('/edit-user', 'updateUser');
+    Route::get('/edit-user-profile', 'showEditUserProfile');
+    Route::post('/edit-user-profile', 'updateUserProfile');
+    Route::post('/hapus-user/{id}', 'deleteUser');
+});
+
 
 

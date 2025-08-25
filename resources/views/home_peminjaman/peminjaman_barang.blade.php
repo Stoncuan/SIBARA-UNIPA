@@ -70,7 +70,11 @@
                                             </li>
                                         </form>
 
-                                        <li><a class="dropdown-item" href="#">Update</a></li>
+                                        <li>
+                                            <a href="{{ url('/edit-user-profile') }}" class="btn btn-warning btn-sm me-1">
+                                                <i class="fas fa-check me-1"></i>Edit
+                                            </a>
+
 
                                     </ul>
                                 </li>
@@ -151,7 +155,7 @@
                             window.onload = function () {
                                 var modal = new bootstrap.Modal(document.getElementById('tambahBarang'));
                                 modal.show();
-                            };
+                            };  
                         </script>
                     @endif
 
@@ -193,18 +197,7 @@
                                         </div>
 
 
-                                        <div class="mb-3">
-                                            <label for="barang_tersedia" class="form-label"></label>
-                                            <input type="text"
-                                                class="form-control @error('barang_tersedia', 'tambahBarang') is-invalid @enderror"
-                                                id="barang_tersedia" placeholder="barang tersedia"
-                                                name="barang_tersedia">
-                                            @error('barang_tersedia', 'tambahBarang')
-                                                <div id="barang_tersedia" class="form-text" style="color: red;">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
+                                        
 
 
                                         <div class="mb-3">
@@ -559,6 +552,159 @@
         </div>
     </div>
 
+    @if ($errors->userEdit->any())
+        <script>
+            window.onload = function () {
+                var modal = new bootstrap.Modal(document.getElementById('userEdit'));
+                modal.show();
+            };  
+        </script>
+    @endif
+
+
+    <!-- Modal edit user -->
+    <div class="modal fade" id="userEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="/edit-user">
+                @csrf
+                <div class="modal-content">
+                    <input hidden type="text" name="userId"
+                        class="form-control @error('id', 'userEdit') is-invalid @enderror" id="userId">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">User Edit</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input readonly type="text"
+                                class="form-control @error('username', 'userEdit') is-invalid @enderror" name="username"
+                                id="username" placeholder="username">
+                            @error('username', 'userEdit')
+                                <div class="form-text" style="color: red;">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama</label>
+                            <input type="text" class="form-control @error('name', 'userEdit') is-invalid @enderror"
+                                name="name" id="name" placeholder="name">
+                            @error('name', 'userEdit')
+                                <div class="form-text" style="color: red;">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Password</label>
+                            <input type="text" class="form-control @error('password', 'userEdit') is-invalid @enderror"
+                                name="password" id="password" placeholder="password">
+                            @error('password', 'userEdit')
+                                <div class="form-text" style="color: red;">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+                        <!-- <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" id="password"
+                                placeholder="password">
+                        </div> -->
+
+                        <!-- <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                            <label class="form-check-label" for="checkDefault">
+                                Default checkbox
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked>
+                            <label class="form-check-label" for="checkChecked">
+                                Checked checkbox
+                            </label>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    @if ($errors->userEditProfile->any())
+        <script>
+            window.onload = function () {
+                var modal = new bootstrap.Modal(document.getElementById('userEditProfile'));
+                modal.show();
+            };  
+        </script>
+    @endif
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="userEditProfile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="/edit-user-profile">
+                @csrf
+                <div class="modal-content">
+                    <input type="hidden" name="userIdProfile"
+                        class="form-control @error('userIdProfile', 'userEditProfile') is-invalid @enderror"
+                        id="userIdProfile">
+
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">User Edit</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="usernameProfile" class="form-label">Username</label>
+                            <input readonly type="text"
+                                class="form-control @error('usernameProfile', 'userEditProfile') is-invalid @enderror"
+                                name="usernameProfile" id="usernameProfile" placeholder="username">
+                            @error('usernameProfile', 'userEditProfile')
+                                <div class="form-text text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nameProfile" class="form-label">Nama</label>
+                            <input type="text"
+                                class="form-control @error('nameProfile', 'userEditProfile') is-invalid @enderror"
+                                name="nameProfile" id="nameProfile" placeholder="name">
+                            @error('nameProfile', 'userEditProfile')
+                                <div class="form-text text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="passwordProfile" class="form-label">Password</label>
+                            <input type="text"
+                                class="form-control @error('passwordProfile', 'userEditProfile') is-invalid @enderror"
+                                name="passwordProfile" id="passwordProfile" placeholder="password">
+                            @error('passwordProfile', 'userEditProfile')
+                                <div class="form-text text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-warning btn-sm me-1" onclick="editUserProfile({{ $userSession['id'] }})">
+        <i class="fas fa-check me-1"></i>Edit
+    </button>
+
 
 
     <!-- Bootstrap JS -->
@@ -577,7 +723,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                        {
+                                                                                                                                                                                                                                            {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -593,7 +739,7 @@
         const myBorrowedItems = [
             @foreach ($userPinjamBarang as $UP)
 
-                         {
+                                                                             {
                     id: {{ $UP['id'] }},
                     itemName: @json($UP['nama_barang']),
                     borrowDate: "2024-01-15",
@@ -609,7 +755,7 @@
                 @else
                         statusClass: "success"
                     @endif
-                        },
+                                                                            },
             @endforeach
            
            
@@ -617,11 +763,12 @@
 
         const allBorrowedItems = [
             @foreach ($pinjamanBarangAll as $pinjamAll)
-                         {
+                                                                             {
                     id: {{ $pinjamAll['id'] }},
                     itemName: @json($pinjamAll['nama_barang']),
                     borrower: @json($pinjamAll['nama_penanggung_jawab']),
                     borrowDate: @json($pinjamAll['tanggal_pinjam_barang']),
+                    keperluan: @json($pinjamAll['keperluan_barang']),
                     @if($pinjamAll['tanggal_kembali_barang'] === null)
                         returnDate: "Belum Kembali",
                     @else
@@ -633,16 +780,18 @@
                 @else
                         statusClass: "success"
                     @endif
-                        },
+                                                                            },
             @endforeach
            
         ];
 
         const user = [
             @foreach ($user as $u)
-                {
+                                                                    {
                     id: {{ $u['id'] }},
                     username: @json($u['username']),
+                    name: @json($u['name']),
+                    created: @json($u['created_at']),
                     statusClass: "warning",
                 },
             @endforeach
@@ -758,7 +907,9 @@
                                 return `<button class="btn btn-sm btn-success" onclick="returnItem(${row.id})">
                                            <i class="fas fa-undo me-1"></i>Kembalikan
                                         </button>`;
+
                             }
+
                             return '<span class="text-muted">-</span>';
                         },
                     },
@@ -835,13 +986,16 @@
                                            <i class="fas fa-eye me-1"></i>Detail
                                         </button>`;
 
-                            buttons += `<button type="button" class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            buttons += `<button type="button" class="btn btn-warning btn-sm me-1" onclick="editUser(${row.id})" data-bs-toggle="modal">
                                                <i class="fas fa-check me-1"></i>Edit
                                             </button>`;
 
-                            buttons += `<button class="btn btn-sm btn-danger me-1" onclick="adminReturnItemHapus(${row.id})">
+                            buttons += `<form method="POST" action="/hapus-user/${row.id}" class="d-inline">
+                                            @csrf
+                                <button class="btn btn-sm btn-danger me-1" >
                                                <i class="fas fa-trash me-1"></i>Hapus
-                                            </button>`;
+                                            </button>
+                            </form>`;
                             return buttons;
                         },
                     },
@@ -891,6 +1045,22 @@
                 // document.getElementById("borrowForm").dataset.itemId = itemId;
             }
         }
+
+        function editUser(userId) {
+            const u = user.find((i) => i.id === userId);
+            if (u) {
+                document.getElementById("userId").value = u.id;
+                document.getElementById("username").value = u.username;
+                document.getElementById("name").value = u.name;
+                document.getElementById("password").value = "";
+
+                const modal = new bootstrap.Modal(
+                    document.getElementById("userEdit")
+                );
+                modal.show();
+            }
+        }
+
 
         // Set today's date as default
         function setTodayDate() {
@@ -1020,34 +1190,43 @@
 
         // View details
         function viewDetails(itemId) {
+            const item = allBorrowedItems.find(i => i.id === itemId);
+
+            if (!item) {
+                Swal.fire("Error", "Data tidak ditemukan", "error");
+                return;
+            }
+
             Swal.fire({
                 title: "Detail Peminjaman",
                 html: `
-                    <div class="text-start">
-                        <p><strong>ID:</strong> ${itemId}</p>
-                        <p><strong>Barang:</strong> Laptop Dell Inspiron 15</p>
-                        <p><strong>Peminjam:</strong> John Doe</p>
-                        <p><strong>Email:</strong> john.doe@email.com</p>
-                        <p><strong>Keperluan:</strong> Untuk keperluan presentasi project</p>
-                        <p><strong>Tanggal Pinjam:</strong> 15 Januari 2024</p>
-                        <p><strong>Tanggal Kembali:</strong> 25 Januari 2024</p>
-                        <p><strong>Status:</strong> <span class="badge bg-warning">Dipinjam</span></p>
-                    </div>
-                `,
+            <div class="text-start">
+                <p><strong>ID: ${item.id}</strong> </p>
+                <p><strong>Barang: ${item.itemName}</strong> </p>
+                <p><strong>Peminjam: ${item.borrower}</strong> </p>
+                <p><strong>Keperluan: ${item.keperluan}</strong> </p>
+                <p><strong>Tanggal Pinjam: ${item.borrowDate}</strong> </p>
+                <p><strong>Tanggal Kembali: ${item.returnDate}</strong> </p>
+                <p><strong>Status:</strong>
+                    <span class="badge bg-${item.statusClass}">${item.status}</span>
+                </p>
+            </div>
+        `,
                 confirmButtonColor: "#007bff",
             });
         }
 
         // View details
         function viewDetailsUser(itemId) {
+            const item = user.find(i => i.id === itemId);
             Swal.fire({
                 title: "Detail User",
                 html: `
                     <div class="text-start">
-                        <p><strong>ID:</strong> ${itemId}</p>
-                        <p><strong>Username:</strong> Tono</p>
-                        <p><strong>Peminjam:</strong> John Doe</p>
-                        <p><strong>Created at</strong> 25 Januari 2024</p>
+                        <p><strong>ID:</strong> ${item.id}</p>
+                        <p><strong>Username:</strong> ${item.username}</p>
+                        <p><strong>Peminjam:</strong> ${item.name}</p>
+                        <p><strong>Created at</strong> ${item.created}</p>
                     </div>
                 `,
                 confirmButtonColor: "#007bff",
@@ -1126,47 +1305,6 @@
     </script>
 
 
-    <!-- Modal edit user -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" placeholder="username">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="password">
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkDefault">
-                            <label class="form-check-label" for="checkDefault">
-                                Default checkbox
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked>
-                            <label class="form-check-label" for="checkChecked">
-                                Checked checkbox
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
 </body>
 

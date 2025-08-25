@@ -69,16 +69,16 @@ class UserController extends Controller
 
     public function updateUser(Request $request)
     {
-        $validasi = $request->validate([
-            'id' => 'required',
+        $validasi = $request->validateWithBag('userEdit', [
+            'userId' => 'required',
             'name' => 'required',
-            'password' => 'required',
+            'password' => 'required'
         ]);
 
-        $id = $validasi['id'];
+        $id = $validasi['userId'];
         $name = $validasi['name'];
-        $password = $validasi['password'];
         $username = $request->input('username');
+        $password = $request->input('password');
 
         $barang = $this->barangService->getAllBarang();
         $totalBarang = $this->barangService->totalBarang();
@@ -87,8 +87,10 @@ class UserController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+        $this->userService->updateUser($id, $name, $password);
 
-        Session::flash('error', 'Data user '.$username.'');
+
+        Session::flash('message', 'Data user ' . $username . ' berhasil diubah');
         return redirect('/peminjaman-barang')
             ->with('title', 'Peminjaman Barang UPA TIK')
             ->with('barang', $barang)
@@ -98,5 +100,75 @@ class UserController extends Controller
             ->with('user', $user)
             ->with('userSession', $userSession);
 
+    }
+
+    public function showEditUserProfile()
+    {
+        $userSession = $this->userService->getUserSession();
+
+         $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+
+        return view('home_peminjaman.update_user_profile')
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('userSession', $userSession);
+    }
+
+    public function updateUserProfile(Request $request)
+    {
+        $validasi = $request->validate( [
+            'id' => 'required',
+            'name' => 'required',
+        ]);
+
+        $id = $validasi['id'];
+        $name = $validasi['name'];
+        $password = $request->input('password');
+
+        $barang = $this->barangService->getAllBarang();
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
+
+        $this->userService->updateUser($id, $name, $password);
+
+
+        Session::flash('message', 'Profile anda berhasil diubah');
+        return redirect('/peminjaman-barang')
+            ->with('title', 'Peminjaman Barang UPA TIK')
+            ->with('barang', $barang)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
+
+    }
+
+    public function deleteUser($id)
+    {
+        $this->userService->deleteUser($id);
+
+        $barang = $this->barangService->getAllBarang();
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
+
+        Session::flash('message', 'Data user berhasil dihapus');
+        return redirect('/peminjaman-barang')
+            ->with('title', 'Peminjaman Barang UPA TIK')
+            ->with('barang', $barang)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
     }
 }

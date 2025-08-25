@@ -9,16 +9,17 @@ use Storage;
 
 class BarangServiceImpl implements BarangService
 {
-    public function getAllBarang(){
+    public function getAllBarang()
+    {
         return Barang::query()->orderBy('id', 'desc')->paginate(15);
     }
     public function createBarang(
-        string $nama_barang, 
-        string $penjelasan_barang, 
-        string $gambar_barang, 
-        int $total_barang, 
+        string $nama_barang,
+        string $penjelasan_barang,
+        string $gambar_barang,
+        int $total_barang,
         int $barang_tersedia,
-    ){
+    ) {
         $barang = new Barang([
             "nama_barang" => $nama_barang,
             "penjelasan_barang" => $penjelasan_barang,
@@ -37,7 +38,7 @@ class BarangServiceImpl implements BarangService
         string $gambar_barang,
         int $total_barang,
         int $barang_tersedia
-    ){
+    ) {
         $barang = Barang::query()->find($id);
         $barang->nama_barang = $nama_barang;
         $barang->penjelasan_barang = $penjelasan_barang;
@@ -47,11 +48,13 @@ class BarangServiceImpl implements BarangService
         $barang->save();
     }
 
-    public function getBarangById(int $id){
+    public function getBarangById(int $id)
+    {
         return Barang::query()->find($id);
     }
 
-    public function updateBarangTesedia($pinjam, $idBarang){
+    public function updateBarangTesedia($pinjam, $idBarang)
+    {
         $barang = Barang::query()->sum('total_barang');
         $barangPinjam = $pinjam;
         $barangTersedia = $barang - $barangPinjam;
@@ -61,23 +64,25 @@ class BarangServiceImpl implements BarangService
         $barangUpdate->save();
     }
 
-    public function deleteBarang(int $id){
+    public function deleteBarang(int $id)
+    {
         $barang = Barang::query()->find($id);
-        if($barang['gambar_barang'] != null){
-            Storage::disk('local')->delete('gambar_barang/'.$barang['gambar_barang']);
+        if ($barang['gambar_barang'] != null) {
+            Storage::disk('local')->delete('gambar_barang/' . $barang['gambar_barang']);
         }
-        if($barang != null){
+        if ($barang != null) {
             $barang->delete();
         }
     }
 
-    public function totalBarang(){
+    public function totalBarang()
+    {
         return Barang::query()->sum('total_barang');
     }
 
-    public function totalBarangTersedia(){
-        $barangPinjam = pinjaman_barang::query()->sum('total_pinjam');
-        $barang = Barang::query()->sum('total_barang');
-        return $barang - $barangPinjam;
+    public function totalBarangTersedia()
+    {
+        $barang = Barang::query()->sum('barang_tersedia');
+        return $barang;
     }
 }

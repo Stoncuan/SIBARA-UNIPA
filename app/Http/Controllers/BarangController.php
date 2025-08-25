@@ -33,6 +33,7 @@ class BarangController extends Controller
         $userSession = $this->userService->getUserSession();
         $userPinjamBarang = $this->pinjamanBarangService->getPinjamanByUser();
         $pinjamanBarangAll = $this->pinjamanBarangService->getAllPinjaman();
+        $data = 0;
 
         return response()->view('home_peminjaman.peminjaman_barang', [
             "title" => "Peminjaman Barang UPA TIK",
@@ -43,7 +44,8 @@ class BarangController extends Controller
             "user" => $user,
             "userSession" => $userSession,
             "userPinjamBarang" => $userPinjamBarang,
-            "pinjamanBarangAll" => $pinjamanBarangAll
+            "pinjamanBarangAll" => $pinjamanBarangAll,
+            "data" => $data
         ]);
     }
 
@@ -72,14 +74,13 @@ class BarangController extends Controller
             'penjelasan_barang' => 'required',
             'gambar_barang' => 'required|file|mimes:jpeg,png,jpg|max:8000',
             'total_barang' => 'required',
-            'barang_tersedia' => 'required',
         ]);
 
         $nama_barang = $validasiBarang['nama_barang'];
         $penjelasan_barang = $validasiBarang['penjelasan_barang'];
         $gambar_barang = $request->file('gambar_barang');
         $total_barang = $validasiBarang['total_barang'];
-        $barang_tersedia = $validasiBarang['barang_tersedia'];
+        $barang_tersedia = $validasiBarang['total_barang'];
 
         $pathGambar = time() . "_" . $gambar_barang->getClientOriginalName();
         $path = 'gambar_barang/' . $pathGambar;

@@ -28,6 +28,10 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
             "id_barang" => $id_barang
         ]);
 
+        $updateTotalBarangTersedia = Barang::query()->find($id_barang);
+        $updateTotalBarangTersedia->barang_tersedia = $updateTotalBarangTersedia->barang_tersedia - $total_pinjam;
+        $updateTotalBarangTersedia->save();
+
         $pinjamBarang->save();
     }
 
