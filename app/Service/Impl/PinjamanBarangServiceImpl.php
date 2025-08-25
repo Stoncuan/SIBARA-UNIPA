@@ -59,11 +59,17 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
     }
 
     public function kembalikanBarang(
-        int $id,
+        $id,
+         $id_barang,
+        int $total_pinjam,
         string $status_barang
     ){
         $pinjamBarang = pinjaman_barang::query()->find($id);
         $pinjamBarang->status_barang = $status_barang;
+
+        $updateTotalBarangTersedia = Barang::query()->find($id_barang);
+        $updateTotalBarangTersedia->barang_tersedia = $updateTotalBarangTersedia->barang_tersedia + $total_pinjam;
+        $updateTotalBarangTersedia->save();
 
         $pinjamBarang->save();
     }
@@ -79,11 +85,11 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
     public function getPinjamanByUser(){
         $user = Auth::user();
 
-        return pinjaman_barang::query()->where('nama_penanggung_jawab', '=', $user['username'])->get();
+        return pinjaman_barang::query()->orderBy('id', 'desc')->where('nama_penanggung_jawab', '=', $user['username'])->get();
     }
 
     public function getAllPinjaman(){
-        return pinjaman_barang::query()->get();
+        return pinjaman_barang::query()->orderBy('id', 'desc')->get();
     }
 
     public function getTotalPinjaman(){

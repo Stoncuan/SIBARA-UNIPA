@@ -52,14 +52,13 @@ class BarangController extends Controller
     public function viewGambarBarang($path)
     {
          // pastikan file ada
-        if (!Storage::disk('local')->exists($path)) {
+        if (!Storage::disk('private')->exists($path)) {
             abort(404, 'File tidak ditemukan');
         }
 
-        // ambil full path file di storage
-        $fullPath = Storage::disk('local')->path($path);
+       
 
-        $fullPath = Storage::disk('local')->path($path);
+        $fullPath = Storage::disk('private')->path($path);
         return response()->file($fullPath);
 
         // kalau mau langsung download, gunakan ini:
@@ -85,13 +84,13 @@ class BarangController extends Controller
         $pathGambar = time() . "_" . $gambar_barang->getClientOriginalName();
         $path = 'gambar_barang/' . $pathGambar;
 
-        Storage::disk('local')->put($path, file_get_contents($gambar_barang));
+        Storage::disk('private')->put($path, file_get_contents($gambar_barang));
 
 
         $this->barangService->createBarang(
             $nama_barang,
             $penjelasan_barang,
-            $gambar_barang,
+            $path,
             $total_barang,
             $barang_tersedia
         );

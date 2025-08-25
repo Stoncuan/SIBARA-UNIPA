@@ -27,12 +27,12 @@ class UserServiceImpl implements UserService
     {
         $user = new User([
             "name" => $name,
-            "uesrname" => $username,
+            "username" => $username,
             "password" => bcrypt($password)
         ]);
 
         $user->save();
-        $user->assignRole('user');
+        //$user->assignRole('user');
     }
 
     public function updateUser(int $id, string $name, string $password){

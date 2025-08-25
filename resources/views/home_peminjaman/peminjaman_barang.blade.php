@@ -71,7 +71,8 @@
                                         </form>
 
                                         <li>
-                                            <a href="{{ url('/edit-user-profile') }}" class="btn btn-warning btn-sm me-1">
+                                            <a href="{{ url('/edit-user-profile') }}"
+                                                class="btn btn-warning btn-sm me-1">
                                                 <i class="fas fa-check me-1"></i>Edit
                                             </a>
 
@@ -197,7 +198,7 @@
                                         </div>
 
 
-                                        
+
 
 
                                         <div class="mb-3">
@@ -320,6 +321,11 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                            data-bs-target="#tambahUser">
+                            Tambah User
+                        </button>
                         <table id="userTable" class="table table-striped table-hover">
                             <thead>
                                 <tr>
@@ -337,6 +343,71 @@
             </div>
         </div>
     </section>
+
+    @if ($errors->tambahUser->any())
+        <script>
+            window.onload = function () {
+                var modal = new bootstrap.Modal(document.getElementById('tambahUser'));
+                modal.show();
+            };
+        </script>
+    @endif
+
+    <!-- Modal -->
+    <div class="modal fade" id="tambahUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/tambah-user">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control @error('name', 'tambahUser') is-invalid @enderror"
+                                id="name" placeholder="name" name="name">
+                            @error('name', 'tambahUser')
+                                <div class="form-text" style="color: red;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text"
+                                class="form-control @error('username', 'tambahUser') is-invalid @enderror" id="username"
+                                placeholder="username" name="username">
+                            @error('username', 'tambahUser')
+                                <div class="form-text" style="color: red;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="text"
+                                class="form-control @error('password', 'tambahUser') is-invalid @enderror" id="password"
+                                placeholder="password" name="password">
+                            @error('password', 'tambahUser')
+                                <div class="form-text" style="color: red;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Tambah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     @if ($errors->tambahPinjam->any())
         <script>
@@ -701,9 +772,7 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-warning btn-sm me-1" onclick="editUserProfile({{ $userSession['id'] }})">
-        <i class="fas fa-check me-1"></i>Edit
-    </button>
+
 
 
 
@@ -723,11 +792,11 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                                                        {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
-                    image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/85f5d0e3-b2ce-4318-adc2-bb40ca0694eb.png",
+                    image: @json(url('/gambar-barang/' . $b['gambar_barang'])),
                     total: {{ $b['total_barang'] }},
                     available: {{ $b['barang_tersedia'] }},
                     category: "all"
@@ -739,10 +808,12 @@
         const myBorrowedItems = [
             @foreach ($userPinjamBarang as $UP)
 
-                                                                             {
+                                                                                                                         {
                     id: {{ $UP['id'] }},
                     itemName: @json($UP['nama_barang']),
                     borrowDate: "2024-01-15",
+                    id_barang: {{ $UP['id_barang'] }},
+                    total_pinjam: {{ $UP['total_pinjam'] }},
                     @if($UP['tanggal_kembali_barang'] === null)
                         returnDate: "Belum Kembali",
                     @else
@@ -755,7 +826,7 @@
                 @else
                         statusClass: "success"
                     @endif
-                                                                            },
+                                                                                                                        },
             @endforeach
            
            
@@ -763,7 +834,7 @@
 
         const allBorrowedItems = [
             @foreach ($pinjamanBarangAll as $pinjamAll)
-                                                                             {
+                                                                                                                         {
                     id: {{ $pinjamAll['id'] }},
                     itemName: @json($pinjamAll['nama_barang']),
                     borrower: @json($pinjamAll['nama_penanggung_jawab']),
@@ -780,14 +851,14 @@
                 @else
                         statusClass: "success"
                     @endif
-                                                                            },
+                                                                                                                        },
             @endforeach
            
         ];
 
         const user = [
             @foreach ($user as $u)
-                                                                    {
+                                                                                                                {
                     id: {{ $u['id'] }},
                     username: @json($u['username']),
                     name: @json($u['name']),
@@ -904,9 +975,14 @@
                                 row.status === "Dipinjam" ||
                                 row.status === "Terlambat"
                             ) {
-                                return `<button class="btn btn-sm btn-success" onclick="returnItem(${row.id})">
+                                return `<form method="POST" action="/kembalikan-barang/${row.id}" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="id_barang" value="${row.id_barang}">
+                                            <input type="hidden" name="total_pinjam" value="${row.total_pinjam}">
+                                    <button type="submit" class="btn btn-sm btn-success">
                                            <i class="fas fa-undo me-1"></i>Kembalikan
-                                        </button>`;
+                                        </button>
+                                </form>`;
 
                             }
 

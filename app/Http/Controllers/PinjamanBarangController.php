@@ -75,6 +75,38 @@ class PinjamanBarangController extends Controller
             ->with('userSession', $userSession);
     }
 
+    public function kembalikanBarang(Request $request, $id)
+    {
+        $id_barang = $request->input('id_barang');
+        $total_pinjam = $request->input('total_pinjam');
+        $status_barang = "Sudah Dikembalikan";
+        $date = date('Y-m-d');
+
+
+        $this->pinjamanBarangService->kembalikanBarang(
+            $id,
+            $id_barang,
+            $total_pinjam,
+            $status_barang
+        );
+
+        $barang = $this->barangService->getAllBarang();
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
+
+        Session::flash('message', 'Barang berhasil di kembalikan');
+        return redirect('/peminjaman-barang')
+            ->with('barang', $barang)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
+    }
+
     public function editPinjaman(Request $request)
     {
         $validasi = $request->validate([

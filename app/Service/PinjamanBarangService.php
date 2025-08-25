@@ -16,8 +16,10 @@ interface PinjamanBarangService
     );
 
     public function kembalikanBarang(
-        int $id,
-        string $status_barang
+         $id,
+         $id_barang,
+        int $total_pinjam,
+        string $status_barang,  
     );
 
     public function updatePinjamBarang(

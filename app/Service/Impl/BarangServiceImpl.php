@@ -28,6 +28,8 @@ class BarangServiceImpl implements BarangService
             "barang_tersedia" => $barang_tersedia,
         ]);
 
+
+
         $barang->save();
     }
 
@@ -57,7 +59,7 @@ class BarangServiceImpl implements BarangService
     {
         $barang = Barang::query()->sum('total_barang');
         $barangPinjam = $pinjam;
-        $barangTersedia = $barang - $barangPinjam;
+        $barangTersedia = $barang + $barangPinjam;
 
         $barangUpdate = Barang::query()->find($idBarang);
         $barangUpdate->baraang_tersedia = $barangTersedia;

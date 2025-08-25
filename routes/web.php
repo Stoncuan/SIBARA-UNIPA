@@ -26,6 +26,7 @@ Route::controller(\App\Http\Controllers\BarangController::class)
 Route::controller(\App\Http\Controllers\PinjamanBarangController::class)
 ->middleware('only_member')->group(function () {
     Route::post('/pinjam-barang', 'createPinjaman');
+    Route::post('/kembalikan-barang/{id}', 'kembalikanBarang');
 });
 
 Route::controller(\App\Http\Controllers\UserController::class)
@@ -35,6 +36,7 @@ Route::controller(\App\Http\Controllers\UserController::class)
     Route::get('/edit-user-profile', 'showEditUserProfile');
     Route::post('/edit-user-profile', 'updateUserProfile');
     Route::post('/hapus-user/{id}', 'deleteUser');
+    Route::post('/tambah-user', 'createUser');
 });
 
 

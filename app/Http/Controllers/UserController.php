@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function createUser(Request $request)
     {
-        $validasi = $request->validate([
+        $validasi = $request->validateWithBag('tambahUser',[
             'name' => 'required',
             'username' => 'required',
             'password' => 'required'
@@ -55,7 +55,7 @@ class UserController extends Controller
         } else {
             $this->userService->createUser($name, $username, $password);
 
-            Session::flash('error', 'Data user berhasil ditambahkan');
+            Session::flash('message', 'Data user berhasil ditambahkan');
             return redirect('/peminjaman-barang')
                 ->with('title', 'Peminjaman Barang UPA TIK')
                 ->with('barang', $barang)
