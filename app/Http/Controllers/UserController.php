@@ -7,6 +7,8 @@ use App\Service\PinjamanBarangService;
 use App\Service\UserService;
 use Illuminate\Http\Request;
 use Session;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -23,7 +25,7 @@ class UserController extends Controller
 
     public function createUser(Request $request)
     {
-        $validasi = $request->validateWithBag('tambahUser',[
+        $validasi = $request->validateWithBag('tambahUser', [
             'name' => 'required',
             'username' => 'required',
             'password' => 'required'
@@ -32,6 +34,12 @@ class UserController extends Controller
         $name = $validasi['name'];
         $username = $validasi['username'];
         $password = $validasi['password'];
+
+        // permision
+        $allRole = Role::all();
+        $allPermission = Permission::all();
+
+
 
         $findUser = $this->userService->getUserByUsername($username);
 
@@ -63,6 +71,8 @@ class UserController extends Controller
                 ->with('totalBarangTersedia', $totalBarangTersedia)
                 ->with('totalBarangPinjam', $totalBarangPinjam)
                 ->with('user', $user)
+                ->with('allRole', $allRole)
+                ->with('allPermission', $allPermission)
                 ->with('userSession', $userSession);
         }
     }
@@ -106,7 +116,7 @@ class UserController extends Controller
     {
         $userSession = $this->userService->getUserSession();
 
-         $totalBarang = $this->barangService->totalBarang();
+        $totalBarang = $this->barangService->totalBarang();
         $totalBarangTersedia = $this->barangService->totalBarangTersedia();
         $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
 
@@ -119,7 +129,7 @@ class UserController extends Controller
 
     public function updateUserProfile(Request $request)
     {
-        $validasi = $request->validate( [
+        $validasi = $request->validate([
             'id' => 'required',
             'name' => 'required',
         ]);
