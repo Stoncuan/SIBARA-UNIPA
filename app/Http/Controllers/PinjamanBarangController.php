@@ -6,8 +6,11 @@ use App\Service\BarangService;
 use App\Service\PinjamanBarangService;
 use App\Service\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use PhpParser\Node\Expr\FuncCall;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PinjamanBarangController extends Controller
 {
@@ -33,7 +36,7 @@ class PinjamanBarangController extends Controller
             'id' => 'required'
         ]);
 
-        
+
 
         $nama_barang = $validasi['nama_barang'];
         $keperluan_barang = $validasi['keperluan_barang'];
@@ -43,7 +46,7 @@ class PinjamanBarangController extends Controller
         $status_barang = "Dipinjam";
         $id = $validasi['id'];
 
-        
+
 
         $this->pinjamanBarangService->pinjamBarang(
             $nama_barang,
@@ -62,6 +65,13 @@ class PinjamanBarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+        $allRole = Role::all();
+        $allPermission = Permission::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+        $userPermission = $USER->getAllPermissions();
+
 
 
 
@@ -72,6 +82,10 @@ class PinjamanBarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('allRole', $allRole)
+            ->with('allPermission', $allPermission)
+            ->with('userRoles', $userRoles)
+            ->with('userPermission', $userPermission)
             ->with('userSession', $userSession);
     }
 
@@ -87,7 +101,8 @@ class PinjamanBarangController extends Controller
             $id,
             $id_barang,
             $total_pinjam,
-            $status_barang
+            $status_barang,
+            $date
         );
 
         $barang = $this->barangService->getAllBarang();
@@ -148,6 +163,7 @@ class PinjamanBarangController extends Controller
         $userSession = $this->userService->getUserSession();
 
 
+
         Session::flash('message', 'Barang ' . $nama_barang . 'berhasil di rubah');
         return redirect('/peminjaman-barang')
             ->with('barang', $barang)
@@ -161,7 +177,7 @@ class PinjamanBarangController extends Controller
     public function deletePinjaman(Request $request, $id)
     {
         $this->pinjamanBarangService->deletePinjaman($id);
-        
+
         $barang = $this->barangService->getAllBarang();
         $totalBarang = $this->barangService->totalBarang();
         $totalBarangTersedia = $this->barangService->totalBarangTersedia();
@@ -172,7 +188,7 @@ class PinjamanBarangController extends Controller
         // ambil nama barang
         $nama_barang = $request->input('nama_barang');
 
-        
+
 
         Session::flash('message', 'Barang ' . $nama_barang . 'berhasil di rubah');
         return redirect('/peminjaman-barang')
@@ -184,5 +200,5 @@ class PinjamanBarangController extends Controller
             ->with('userSession', $userSession);
     }
 
-  
+
 }

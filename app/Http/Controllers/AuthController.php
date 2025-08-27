@@ -16,7 +16,7 @@ class AuthController extends Controller
 
     public function login(){
         return Response()->view("auth.login", [
-            "title" => "Login Peminjaman Barang UPA TIK UNIPA"
+            "title" => "SIBARA-UNIPA"
         ]);
     }
 
@@ -44,7 +44,7 @@ class AuthController extends Controller
         $request->session()->forget("username");
 
         return response()->view("auth.login", [
-            "title" => "Halaman Login",
+            "title" => "SIBARA-UNIPA",
             "message" => "Anda sudah logout"
         ]);
     }

@@ -19,6 +19,10 @@ class UserServiceImpl implements UserService
             })->get();
     }
 
+    public function getUserById(int $id){
+        return User::query()->find($id);
+    }
+
     public function getUserByUsername($username){
         return User::query()->where('username', '=', $username)->first('username');
     }

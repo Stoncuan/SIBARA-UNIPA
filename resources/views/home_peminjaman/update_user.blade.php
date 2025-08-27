@@ -110,57 +110,68 @@
         <div class="col-md-6 offset-md-3">
             <div class="modal-dialog">
                 <div class="modal-content " style="background-color: #EEEEEE; margin-top: 40px;">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit User Profile</h5>
-                    </div>
-                    <form method="post" action="/edit-user-profile">
+                    <form method="post" action="/edit-user">
                         @csrf
-                        <div class="modal-body: m-2">
-                            <input type="hidden" name="id" id="id"
+                        <div class="modal-content ">
+                            <input hidden type="text" name="userId"
                                 class="form-control @error('userId', 'userEdit') is-invalid @enderror"
-                                value="{{ old('id', $userSession['id']) }}" readonly>
-                            @error('id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                value="{{ old('userId', $user['id']) }}">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">User Edit</h1>
+                            </div>
+                            <div class="modal-body m-2">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input readonly type="text"
+                                        class="form-control @error('username', 'userEdit') is-invalid @enderror"
+                                        name="username" id="username" placeholder="username"
+                                        value="{{ old('username', $user['username']) }}">
+                                    @error('username', 'userEdit')
+                                        <div class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                            @enderror
 
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" name="username" id="username" class="form-control"
-                                    value="{{ old('username', $userSession['username']) }}" readonly>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nama</label>
+                                    <input type="text"
+                                        class="form-control @error('name', 'userEdit') is-invalid @enderror" name="name"
+                                        id="name" placeholder="name" value="{{ old('name', $user['name']) }}">
+                                    @error('name', 'userEdit')
+                                        <div class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" name="name" id="name"
-                                    class="form-control @error('name', 'userEdit') is-invalid @enderror"
-                                    value="{{ old('name', $userSession['name']) }}">
-                                @error('name')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Password</label>
+                                    <input type="text"
+                                        class="form-control @error('password', 'userEdit') is-invalid @enderror"
+                                        name="password" id="password" placeholder="password">
+                                    @error('password', 'userEdit')
+                                        <div class="form-text" style="color: red;">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+                                @foreach ($allPermission as $p)
+                                    <div class="form-check form-check-inline">
+                                        <input
+                                            class="form-check-input @error('permission', 'userEdit') is-invalid @enderror"
+                                            type="checkbox" name="permission[]" id="permission_{{ $p['id'] }}"
+                                            value="{{ $p['name'] }}" {{ $user->hasPermissionTo($p['name']) ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="permission_{{ $p['id'] }}">{{ $p['name'] }}</label>
+                                        @error('permission', 'userEdit')
+                                            <small>{{ $message }}</small>
+                                        @enderror
                                     </div>
-                                @enderror
+                                @endforeach
                             </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="text" name="password" id="password"
-                                    class="form-control @error('password') is-invalid @enderror"
-                                    value="{{ old('password') }}">
-                                @error('password', 'userEdit')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                            <div class="modal-footer">
-                                <a href="{{ url('/peminjaman-barang') }}" type="btn btn-primary"
-                                    class="btn btn-secondary me-2">Kembali</a>
+                            <div class="modal-footer me-3 mb-2">
+                                <a href="{{ url('/peminjaman-barang') }}" class="btn btn-secondary me-2"
+                                    >Kembali</a>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>

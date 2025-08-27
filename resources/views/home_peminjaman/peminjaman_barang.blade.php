@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title }}</title>
 
+    <link href="{{ asset('Image') }}/logo.png" rel="icon">
+
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -43,7 +45,7 @@
                 <div class="col-md-6">
                     <div class="d-flex align-items-center">
                         <div class="logo me-3">
-                            <i class="fas fa-laptop"></i>
+                            <img src="{{ asset('Image') }}/logo.png" height="60px" alt="Logo">
                         </div>
                         <div>
                             <h4 class="mb-0">UPA TIK</h4>
@@ -66,14 +68,16 @@
                                     <ul class="dropdown-menu">
                                         <form method="post" action="/logout">
                                             @csrf
-                                            <li><button class="dropdown-item btn btn-warning" href="#">Logout</button>
+
+                                            <li><button class="dropdown-item btn btn-warning" href="#"><i
+                                                        class="fa-solid me-1 fa-right-from-bracket"></i>Logout</button>
                                             </li>
                                         </form>
 
                                         <li>
                                             <a href="{{ url('/edit-user-profile') }}"
-                                                class="btn btn-warning btn-sm me-1">
-                                                <i class="fas fa-check me-1"></i>Edit
+                                                class="dropdown-item btn btn-warning me-1">
+                                                <i class="fa-solid me-1 fa-pen-to-square"></i></i>Update Profile
                                             </a>
 
 
@@ -145,10 +149,13 @@
                     <h2 class="text-center mb-4">Daftar Barang Tersedia</h2>
                 </div>
                 <div class="col-12">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahBarang">
-                        Tambah Barang
-                    </button>
+                    @can('tambah barang')
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahBarang">
+                            Tambah Barang
+                        </button>
+                    @endcan
+
 
 
                     @if ($errors->tambahBarang->any())
@@ -312,37 +319,43 @@
         </div>
     </section>
 
-    <!-- user data list -->
-    <section class="py-5">
-        <div class="container">
-            <div class="card table-card">
-                <div class="card-header">
-                    <h4 class="mb-0"><i class="fas fa-list-alt me-2"></i>Data list user</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                            data-bs-target="#tambahUser">
-                            Tambah User
-                        </button>
-                        <table id="userTable" class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Username</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Data will be populated by JavaScript -->
-                            </tbody>
-                        </table>
+    @can('data user list')
+        <!-- user data list -->
+        <section class="py-5">
+            <div class="container">
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-list-alt me-2"></i>Data list user</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            @can('tambah user')
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                                    data-bs-target="#tambahUser">
+                                    Tambah User
+                                </button>
+                            @endcan
+                            <table id="userTable" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Username</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endcan
+
+
 
     @if ($errors->tambahUser->any())
         <script>
@@ -361,7 +374,7 @@
                 <form method="post" action="/tambah-user">
                     @csrf
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah User</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -623,85 +636,10 @@
         </div>
     </div>
 
-    @if ($errors->userEdit->any())
-        <script>
-            window.onload = function () {
-                var modal = new bootstrap.Modal(document.getElementById('userEdit'));
-                modal.show();
-            };  
-        </script>
-    @endif
 
 
-    <!-- Modal edit user -->
-    <div class="modal fade" id="userEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="post" action="/edit-user">
-                @csrf
-                <div class="modal-content">
-                    <input hidden type="text" name="userId"
-                        class="form-control @error('id', 'userEdit') is-invalid @enderror" id="userId">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">User Edit</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input readonly type="text"
-                                class="form-control @error('username', 'userEdit') is-invalid @enderror" name="username"
-                                id="username" placeholder="username">
-                            @error('username', 'userEdit')
-                                <div class="form-text" style="color: red;">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama</label>
-                            <input type="text" class="form-control @error('name', 'userEdit') is-invalid @enderror"
-                                name="name" id="name" placeholder="name">
-                            @error('name', 'userEdit')
-                                <div class="form-text" style="color: red;">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Password</label>
-                            <input type="text" class="form-control @error('password', 'userEdit') is-invalid @enderror"
-                                name="password" id="password" placeholder="password">
-                            @error('password', 'userEdit')
-                                <div class="form-text" style="color: red;">{{ $message }}</div>
-                            @enderror
-                        </div>
 
 
-                        <!-- <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password" id="password"
-                                placeholder="password">
-                        </div> -->
-
-                        <!-- <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkDefault">
-                            <label class="form-check-label" for="checkDefault">
-                                Default checkbox
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked>
-                            <label class="form-check-label" for="checkChecked">
-                                Checked checkbox
-                            </label>
-                        </div> -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
 
 
@@ -792,7 +730,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                                                                                                    {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -808,25 +746,21 @@
         const myBorrowedItems = [
             @foreach ($userPinjamBarang as $UP)
 
-                                                                                                                         {
-                    id: {{ $UP['id'] }},
-                    itemName: @json($UP['nama_barang']),
-                    borrowDate: "2024-01-15",
-                    id_barang: {{ $UP['id_barang'] }},
-                    total_pinjam: {{ $UP['total_pinjam'] }},
-                    @if($UP['tanggal_kembali_barang'] === null)
-                        returnDate: "Belum Kembali",
-                    @else
-                            returnDate: @json($UP['tanggal_kembali_barang']),
-                        @endif
+                                                                                                                                                                                 {
+                id: {{ $UP['id'] }},
+                itemName: @json($UP['nama_barang']),
+                borrowDate: "2024-01-15",
+                id_barang: {{ $UP['id_barang'] }},
+                total_pinjam: {{ $UP['total_pinjam'] }},
+                returnDate: @json($UP['tanggal_barang_kembali'] ?? 'Belum Kembali'),
 
                 status: @json($UP['status_barang']),
                 @if($UP['status_barang'] === 'Dipinjam')
                     statusClass: "warning"
                 @else
-                        statusClass: "success"
-                    @endif
-                                                                                                                        },
+                    statusClass: "success"
+                @endif
+                                                                                                                                                                                },
             @endforeach
            
            
@@ -834,31 +768,27 @@
 
         const allBorrowedItems = [
             @foreach ($pinjamanBarangAll as $pinjamAll)
-                                                                                                                         {
-                    id: {{ $pinjamAll['id'] }},
-                    itemName: @json($pinjamAll['nama_barang']),
-                    borrower: @json($pinjamAll['nama_penanggung_jawab']),
-                    borrowDate: @json($pinjamAll['tanggal_pinjam_barang']),
-                    keperluan: @json($pinjamAll['keperluan_barang']),
-                    @if($pinjamAll['tanggal_kembali_barang'] === null)
-                        returnDate: "Belum Kembali",
-                    @else
-                            returnDate: @json($pinjamAll['tanggal_kembali_barang']),
-                        @endif
+                                                                                                                                                                                 {
+                id: {{ $pinjamAll['id'] }},
+                itemName: @json($pinjamAll['nama_barang']),
+                borrower: @json($pinjamAll['nama_penanggung_jawab']),
+                borrowDate: @json($pinjamAll['tanggal_pinjam_barang']),
+                keperluan: @json($pinjamAll['keperluan_barang']),
+                returnDate: @json($pinjamAll['tanggal_barang_kembali'] ?? 'Belum Kembali'),
                 status: @json($pinjamAll['status_barang']),
                 @if($pinjamAll['status_barang'] === 'Dipinjam')
                     statusClass: "warning"
                 @else
-                        statusClass: "success"
-                    @endif
-                                                                                                                        },
+                    statusClass: "success"
+                @endif
+                                                                                                                                                                                },
             @endforeach
            
         ];
 
         const user = [
             @foreach ($user as $u)
-                                                                                                                {
+                                                                                                                                                                            {
                     id: {{ $u['id'] }},
                     username: @json($u['username']),
                     name: @json($u['name']),
@@ -928,17 +858,21 @@
                     }
                                 </button>
                                 
-                                <form action="/hapus-barang/${item.id}" method="post">
+                                @can('hapus barang')
+                                    <form action="/hapus-barang/${item.id}" method="post">
                                     @csrf
                                     <button type="submit" class="btn btn-danger w-100 mt-2">
                                     <i class="fas fa-hand-holding me-2"></i>
                                     Hapus Barang</button>
-                                </form>
+                                    </form>
+                                @endcan
 
                             
-                                <button class="btn btn-warning w-100 mt-2" onclick="editBorrowModal(${item.id})"  >
-                                <i class="fas fa-hand-holding me-2"></i>
-                                Edit Barang</button>
+                                @can('edit barang')
+                                    <button class="btn btn-warning w-100 mt-2" onclick="editBorrowModal(${item.id})"  >
+                                    <i class="fas fa-hand-holding me-2"></i>
+                                    Edit Barang</button>
+                                @endcan
                             </div>
                         </div>
                     </div>
@@ -1024,9 +958,11 @@
                                 row.status === "Dipinjam" ||
                                 row.status === "Terlambat"
                             ) {
-                                buttons += `<button class="btn btn-sm btn-success me-1" onclick="adminReturnItem(${row.id})">
-                                               <i class="fas fa-check me-1"></i>Kembalikan
-                                            </button>`;
+                                buttons += `@can('kembalikan barang user')
+                                    <button class="btn btn-sm btn-success me-1" onclick="adminReturnItem(${row.id})">
+                                                   <i class="fas fa-check me-1"></i>Kembalikan
+                                                </button>
+                                @endcan`;
                             }
                             buttons += `<button class="btn btn-sm btn-info" onclick="viewDetails(${row.id})">
                                            <i class="fas fa-eye me-1"></i>Detail
@@ -1062,16 +998,22 @@
                                            <i class="fas fa-eye me-1"></i>Detail
                                         </button>`;
 
-                            buttons += `<button type="button" class="btn btn-warning btn-sm me-1" onclick="editUser(${row.id})" data-bs-toggle="modal">
-                                               <i class="fas fa-check me-1"></i>Edit
-                                            </button>`;
+                            buttons += `@can('edit user')
+                                                                <a href="javascript:void(0)" 
+                                    class="btn btn-warning btn-sm me-1" 
+                                    onclick="editUser(${row.id})">
+                                    <i class="fas fa-check me-1"></i>Edit
+                                </a>
+                            @endcan`;
 
-                            buttons += `<form method="POST" action="/hapus-user/${row.id}" class="d-inline">
-                                            @csrf
-                                <button class="btn btn-sm btn-danger me-1" >
-                                               <i class="fas fa-trash me-1"></i>Hapus
-                                            </button>
-                            </form>`;
+                            buttons += `@can('hapus user') 
+                                <form method="POST" action="/hapus-user/${row.id}" class="d-inline">
+                                                @csrf
+                                    <button class="btn btn-sm btn-danger me-1" >
+                                                   <i class="fas fa-trash me-1"></i>Hapus
+                                                </button>
+                                </form>
+                            @endcan`;
                             return buttons;
                         },
                     },
@@ -1123,18 +1065,7 @@
         }
 
         function editUser(userId) {
-            const u = user.find((i) => i.id === userId);
-            if (u) {
-                document.getElementById("userId").value = u.id;
-                document.getElementById("username").value = u.username;
-                document.getElementById("name").value = u.name;
-                document.getElementById("password").value = "";
-
-                const modal = new bootstrap.Modal(
-                    document.getElementById("userEdit")
-                );
-                modal.show();
-            }
+            window.location.href = `/edit-user/${userId}`;
         }
 
 

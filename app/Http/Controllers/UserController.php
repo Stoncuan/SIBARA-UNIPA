@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Service\BarangService;
 use App\Service\PinjamanBarangService;
 use App\Service\UserService;
+use Auth;
 use Illuminate\Http\Request;
 use Session;
 use Spatie\Permission\Models\Permission;
@@ -35,9 +37,6 @@ class UserController extends Controller
         $username = $validasi['username'];
         $password = $validasi['password'];
 
-        // permision
-        $allRole = Role::all();
-        $allPermission = Permission::all();
 
 
 
@@ -49,6 +48,7 @@ class UserController extends Controller
         $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
+
 
         if ($findUser) {
             Session::flash('error', 'Data user ' . $username . ' sudah ada');
@@ -71,10 +71,38 @@ class UserController extends Controller
                 ->with('totalBarangTersedia', $totalBarangTersedia)
                 ->with('totalBarangPinjam', $totalBarangPinjam)
                 ->with('user', $user)
-                ->with('allRole', $allRole)
-                ->with('allPermission', $allPermission)
                 ->with('userSession', $userSession);
         }
+    }
+
+    public function showUpateUser(Request $request, $id)
+    {
+        $userDetail = $this->userService->getUserById($id);
+        $userSession = $this->userService->getUserSession();
+
+        $user = $this->userService->getUserById($id);
+
+        $allRole = Role::all();
+        $allPermission = Permission::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+        $userPermission = $USER->getAllPermissions();
+
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        return view('home_peminjaman.update_user')
+            ->with('userDetail', $userDetail)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('userSession', $userSession)
+            ->with('allRole', $allRole)
+            ->with('allPermission', $allPermission)
+            ->with('userRoles', $userRoles)
+            ->with('user', $user)
+            ->with('userPermission', $userPermission);
     }
 
     public function updateUser(Request $request)
@@ -82,7 +110,9 @@ class UserController extends Controller
         $validasi = $request->validateWithBag('userEdit', [
             'userId' => 'required',
             'name' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'permission' => 'nullable',
+            'permission.*' => 'string|exists:permissions,name'
         ]);
 
         $id = $validasi['userId'];
@@ -96,6 +126,14 @@ class UserController extends Controller
         $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
+
+        $USER = User::findOrFail($id);
+
+        if ($request->has('permission')) {
+            $USER->syncPermissions($validasi['permission']);
+        } else {
+            $USER->syncPermissions([]); // Hapus semua jika kosong
+        }
 
         $this->userService->updateUser($id, $name, $password);
 

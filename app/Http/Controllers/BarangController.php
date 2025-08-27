@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Service\BarangService;
 use App\Service\PinjamanBarangService;
 use App\Service\UserService;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class BarangController extends Controller
 {
@@ -35,8 +38,9 @@ class BarangController extends Controller
         $pinjamanBarangAll = $this->pinjamanBarangService->getAllPinjaman();
         $data = 0;
 
+
         return response()->view('home_peminjaman.peminjaman_barang', [
-            "title" => "Peminjaman Barang UPA TIK",
+            "title" => "SIBARA-UNIPA",
             "totalBarang" => $totalBarang,
             "barang" => $barang,
             "totalBarangTersedia" => $totalBarangTersedia,
@@ -45,18 +49,18 @@ class BarangController extends Controller
             "userSession" => $userSession,
             "userPinjamBarang" => $userPinjamBarang,
             "pinjamanBarangAll" => $pinjamanBarangAll,
-            "data" => $data
+            "data" => $data,
         ]);
     }
 
     public function viewGambarBarang($path)
     {
-         // pastikan file ada
+        // pastikan file ada
         if (!Storage::disk('private')->exists($path)) {
             abort(404, 'File tidak ditemukan');
         }
 
-       
+
 
         $fullPath = Storage::disk('private')->path($path);
         return response()->file($fullPath);
@@ -102,6 +106,8 @@ class BarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+
+
         Session::flash('message', 'Data barang berhasil ditambahkan');
         return redirect('/peminjaman-barang')
             ->with('barang', $barang)
@@ -137,11 +143,11 @@ class BarangController extends Controller
             $path = 'gambar_barang/' . $pathGambar;
 
             if ($dataBarang) {
-                Storage::disk('local')->delete('gambar_barang/' . $dataBarang['gambar_barang']);
+                Storage::disk('private')->delete('gambar_barang/' . $dataBarang['gambar_barang']);
             }
 
-            Storage::disk('local')->put($path, file_get_contents($gambar_barang));
-            $gambar_barang = $pathGambar;
+            Storage::disk('private')->put($path, file_get_contents($gambar_barang));
+            $gambar_barang = $path;
         }
 
         $this->barangService->updateBarang(

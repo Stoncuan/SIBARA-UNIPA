@@ -19,7 +19,8 @@ interface PinjamanBarangService
          $id,
          $id_barang,
         int $total_pinjam,
-        string $status_barang,  
+        string $status_barang, 
+        $date 
     );
 
     public function updatePinjamBarang(
