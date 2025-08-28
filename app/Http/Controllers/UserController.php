@@ -37,9 +37,6 @@ class UserController extends Controller
         $username = $validasi['username'];
         $password = $validasi['password'];
 
-
-
-
         $findUser = $this->userService->getUserByUsername($username);
 
         $barang = $this->barangService->getAllBarang();
@@ -52,8 +49,8 @@ class UserController extends Controller
 
         if ($findUser) {
             Session::flash('error', 'Data user ' . $username . ' sudah ada');
-            return redirect('/peminjaman-barang')
-                ->with('title', 'Peminjaman Barang UPA TIK')
+            return redirect('/peminjaman-barang#userTable')
+                ->with('title', 'SIBARA-UNIPA')
                 ->with('barang', $barang)
                 ->with('totalBarang', $totalBarang)
                 ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -64,8 +61,8 @@ class UserController extends Controller
             $this->userService->createUser($name, $username, $password);
 
             Session::flash('message', 'Data user berhasil ditambahkan');
-            return redirect('/peminjaman-barang')
-                ->with('title', 'Peminjaman Barang UPA TIK')
+            return redirect('/peminjaman-barang#userTable')
+                ->with('title', 'SIBARA-UNIPA')
                 ->with('barang', $barang)
                 ->with('totalBarang', $totalBarang)
                 ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -139,8 +136,8 @@ class UserController extends Controller
 
 
         Session::flash('message', 'Data user ' . $username . ' berhasil diubah');
-        return redirect('/peminjaman-barang')
-            ->with('title', 'Peminjaman Barang UPA TIK')
+        return redirect('/peminjaman-barang#userTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -187,8 +184,8 @@ class UserController extends Controller
 
 
         Session::flash('message', 'Profile anda berhasil diubah');
-        return redirect('/peminjaman-barang')
-            ->with('title', 'Peminjaman Barang UPA TIK')
+        return redirect('/peminjaman-barang#userTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -210,8 +207,8 @@ class UserController extends Controller
         $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Data user berhasil dihapus');
-        return redirect('/peminjaman-barang')
-            ->with('title', 'Peminjaman Barang UPA TIK')
+        return redirect('/peminjaman-barang#userTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)

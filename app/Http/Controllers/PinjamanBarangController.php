@@ -76,7 +76,8 @@ class PinjamanBarangController extends Controller
 
 
         Session::flash('message', 'Barang berhasil di pinjam');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#myBorrowedTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -113,7 +114,8 @@ class PinjamanBarangController extends Controller
         $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Barang berhasil di kembalikan');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#myBorrowedTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -165,7 +167,8 @@ class PinjamanBarangController extends Controller
 
 
         Session::flash('message', 'Barang ' . $nama_barang . 'berhasil di rubah');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#myBorrowedTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -191,7 +194,8 @@ class PinjamanBarangController extends Controller
 
 
         Session::flash('message', 'Barang ' . $nama_barang . 'berhasil di rubah');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#myBorrowedTable')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)

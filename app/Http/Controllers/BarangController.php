@@ -109,7 +109,8 @@ class BarangController extends Controller
 
 
         Session::flash('message', 'Data barang berhasil ditambahkan');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#itemsContainer')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -124,7 +125,7 @@ class BarangController extends Controller
             'id' => 'required',
             'nama_barang' => 'required',
             'penjelasan_barang' => 'required',
-            'gambar_barang' => 'required',
+            'gambar_barang' => 'file|mimes:jpeg,png,jpg|max:8000',
             'total_barang' => 'required',
             'barang_tersedia' => 'required',
         ]);
@@ -167,7 +168,7 @@ class BarangController extends Controller
         $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Data barang berhasil di rubah');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#itemsContainer')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)
@@ -188,7 +189,8 @@ class BarangController extends Controller
         $userSession = $this->userService->getUserSession();
 
         Session::flash('message', 'Data barang berhasil dihapus');
-        return redirect('/peminjaman-barang')
+        return redirect('/peminjaman-barang#itemsContainer')
+            ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)
             ->with('totalBarangTersedia', $totalBarangTersedia)

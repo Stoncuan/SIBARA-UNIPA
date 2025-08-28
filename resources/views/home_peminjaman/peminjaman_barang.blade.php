@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-end">
+                <div class="col-md-6 text-end mt-2">
                     <div class="d-flex align-items-center justify-content-end">
                         <div class="me-3">
                             <i class="fas fa-user-circle fa-2x"></i>
@@ -321,7 +321,7 @@
 
     @can('data user list')
         <!-- user data list -->
-        <section class="py-5">
+        <section class="py-5" >
             <div class="container">
                 <div class="card table-card">
                     <div class="card-header">
@@ -354,7 +354,6 @@
             </div>
         </section>
     @endcan
-
 
 
     @if ($errors->tambahUser->any())
@@ -1232,7 +1231,7 @@
                     <div class="text-start">
                         <p><strong>ID:</strong> ${item.id}</p>
                         <p><strong>Username:</strong> ${item.username}</p>
-                        <p><strong>Peminjam:</strong> ${item.name}</p>
+                        <p><strong>Name:</strong> ${item.name}</p>
                         <p><strong>Created at</strong> ${item.created}</p>
                     </div>
                 `,

@@ -10,14 +10,14 @@ use Auth;
 class PinjamanBarangServiceImpl implements PinjamanBarangService
 {
     public function pinjamBarang(
-        string $nama_barang, 
+        string $nama_barang,
         string $keperluan_barang,
         $total_pinjam,
         string $tanggal_pinjam_barang,
         string $nama_penanggung_jawab,
         string $status_barang,
         $id_barang
-    ){
+    ) {
         $pinjamBarang = new pinjaman_barang([
             "nama_barang" => $nama_barang,
             "keperluan_barang" => $keperluan_barang,
@@ -44,7 +44,7 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
         string $tanggal_barang_kembali,
         string $nama_penanggung_jawab,
         string $status_barang
-    ){
+    ) {
         $pinjamBarang = pinjaman_barang::query()->find($id);
         $pinjamBarang->nama_barang = $nama_barang;
         $pinjamBarang->keperluan_barang = $keperluan_barang;
@@ -55,47 +55,52 @@ class PinjamanBarangServiceImpl implements PinjamanBarangService
         $pinjamBarang->status_barang = $status_barang;
 
         $pinjamBarang->save();
-        
+
     }
 
     public function kembalikanBarang(
         $id,
-         $id_barang,
+        $id_barang,
         int $total_pinjam,
         string $status_barang,
         $date
-    ){
+    ) {
         $pinjamBarang = pinjaman_barang::query()->find($id);
         $pinjamBarang->status_barang = $status_barang;
         $pinjamBarang->tanggal_barang_kembali = $date;
+        $pinjamBarang->total_pinjam = 0;
 
         $updateTotalBarangTersedia = Barang::query()->find($id_barang);
         $updateTotalBarangTersedia->barang_tersedia = $updateTotalBarangTersedia->barang_tersedia + $total_pinjam;
-        
+
         $updateTotalBarangTersedia->save();
 
         $pinjamBarang->save();
     }
 
-    public function deletePinjaman(int $id){
+    public function deletePinjaman(int $id)
+    {
         $pinjamanBarang = pinjaman_barang::query()->find($id);
 
-        if($pinjamanBarang != null){
+        if ($pinjamanBarang != null) {
             $pinjamanBarang->delete();
         }
     }
 
-    public function getPinjamanByUser(){
+    public function getPinjamanByUser()
+    {
         $user = Auth::user();
 
         return pinjaman_barang::query()->orderBy('id', 'desc')->where('nama_penanggung_jawab', '=', $user['username'])->get();
     }
 
-    public function getAllPinjaman(){
+    public function getAllPinjaman()
+    {
         return pinjaman_barang::query()->orderBy('id', 'desc')->get();
     }
 
-    public function getTotalPinjaman(){
+    public function getTotalPinjaman()
+    {
         return pinjaman_barang::query()->sum('total_pinjam');
     }
 
