@@ -70,7 +70,7 @@ class BarangServiceImpl implements BarangService
     {
         $barang = Barang::query()->find($id);
         if ($barang['gambar_barang'] != null) {
-            Storage::disk('local')->delete('gambar_barang/' . $barang['gambar_barang']);
+            Storage::disk('private')->delete($barang['gambar_barang']);
         }
         if ($barang != null) {
             $barang->delete();
