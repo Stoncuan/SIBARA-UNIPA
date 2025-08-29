@@ -119,41 +119,41 @@
             <!-- Button trigger modal -->
             <button type=" button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#tambahRole">
                 Tambah role
-                </button>
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr style="text-align: center;">
-                            <th scope="col">Role name</th>
-                            <th scope="col">permissions</th>
-                            <th scope="col">Action</th>
+            </button>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr style="text-align: center;">
+                        <th scope="col">Role name</th>
+                        <th scope="col">permissions</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($allRolePermission as $rolePermission)
+                        @continue(in_array($rolePermission->name, ['superAdmin']))
+
+                        <tr>
+                            <td>{{ $rolePermission->name }}</td>
+                            <td>
+                                @foreach ($rolePermission->permissions as $permission)
+                                    <span class="">{{ $permission->name . "," }}</span>
+                                @endforeach
+                            </td>
+                            <td>
+                                <a href="{{ url('/edit-role/' . $rolePermission->id) }}"
+                                    class="btn btn-sm btn-primary mb-2">Edit</a>
+
+                                <form action="/delete-role/{{ $rolePermission->id }}" method="post" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($allRolePermission as $rolePermission)
-                            <tr>
-                                <td>{{ $rolePermission->name }}</td>
-                                <td>
-                                    @foreach ($rolePermission->permissions as $permission)
-                                        <span class="">{{ $permission->name . "," }}</span>
-                                    @endforeach
-                                </td>
-                                <td>
-                                    <a href="{{ url('/edit-role/' . $rolePermission->id) }}"
-                                        class="btn btn-sm btn-primary mb-2">Edit</a>
+                    @endforeach
 
-                                    <form action="/delete-role/{{ $rolePermission->id }}" method="post" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
 
-                                    </form>
-
-                                </td>
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
 
         </div>
     </section>
