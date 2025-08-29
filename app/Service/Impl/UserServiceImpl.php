@@ -27,7 +27,7 @@ class UserServiceImpl implements UserService
         return User::query()->where('username', '=', $username)->first('username');
     }
 
-    public function createUser(string $name, string $username, string $password)
+    public function createUser(string $name, string $username, string $password, $role)
     {
         $user = new User([
             "name" => $name,
@@ -36,7 +36,7 @@ class UserServiceImpl implements UserService
         ]);
 
         $user->save();
-        //$user->assignRole('user');
+        $user->assignRole($role);
     }
 
     public function updateUser(int $id, string $name, string $password){

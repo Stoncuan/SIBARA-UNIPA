@@ -33,6 +33,7 @@ class PinjamanBarangController extends Controller
             'total_pinjam' => 'required',
             'tanggal_pinjam_barang' => 'required',
             'nama_penanggung_jawab' => 'required',
+            'availableQty' => 'required',
             'id' => 'required'
         ]);
 
@@ -66,15 +67,10 @@ class PinjamanBarangController extends Controller
         $userSession = $this->userService->getUserSession();
 
         $allRole = Role::all();
-        $allPermission = Permission::all();
 
         $USER = Auth::user();
         $userRoles = $USER->getRoleNames();
-        $userPermission = $USER->getAllPermissions();
-
-
-
-
+       
         Session::flash('message', 'Barang berhasil di pinjam');
         return redirect('/peminjaman-barang#myBorrowedTable')
             ->with('title', 'SIBARA-UNIPA')
@@ -84,9 +80,7 @@ class PinjamanBarangController extends Controller
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
             ->with('allRole', $allRole)
-            ->with('allPermission', $allPermission)
             ->with('userRoles', $userRoles)
-            ->with('userPermission', $userPermission)
             ->with('userSession', $userSession);
     }
 
@@ -113,6 +107,11 @@ class PinjamanBarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
         Session::flash('message', 'Barang berhasil di kembalikan');
         return redirect('/peminjaman-barang#myBorrowedTable')
             ->with('title', 'SIBARA-UNIPA')
@@ -121,6 +120,8 @@ class PinjamanBarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('allRole', $allRole)
+            ->with('userRoles', $userRoles)
             ->with('userSession', $userSession);
     }
 
@@ -164,6 +165,11 @@ class PinjamanBarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
 
 
         Session::flash('message', 'Barang ' . $nama_barang . 'berhasil di rubah');
@@ -174,6 +180,8 @@ class PinjamanBarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('allRole', $allRole)
+            ->with('userRoles', $userRoles)
             ->with('userSession', $userSession);
     }
 
@@ -188,10 +196,14 @@ class PinjamanBarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
         // ambil nama barang
         $nama_barang = $request->input('nama_barang');
-
-
 
         Session::flash('message', 'Barang ' . $nama_barang . 'berhasil di rubah');
         return redirect('/peminjaman-barang#myBorrowedTable')
@@ -201,6 +213,8 @@ class PinjamanBarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('allRole', $allRole)
+            ->with('userRoles', $userRoles)
             ->with('userSession', $userSession);
     }
 

@@ -11,7 +11,7 @@ interface UserService
 
     public function getUserById(int $id);
 
-    public function createUser(string $name, string $username, string $password);
+    public function createUser(string $name, string $username, string $password, $role);
     
     public function updateUser(int $id, string $name, string $password);
 

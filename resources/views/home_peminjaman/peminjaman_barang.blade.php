@@ -186,7 +186,8 @@
                                             <label for="nama_barang" class="form-label"></label>
                                             <input type="text"
                                                 class="form-control @error('nama_barang', 'tambahBarang') is-invalid @enderror"
-                                                id="nama_barang" placeholder="nama barang" name="nama_barang">
+                                                id="nama_barang" placeholder="nama barang" name="nama_barang"
+                                                value="{{ old('nama_barang') }}">
                                             @error('nama_barang', 'tambahBarang')
                                                 <div id="nama_barang" class="form-text" style="color: red;">{{ $message }}
                                                 </div>
@@ -197,7 +198,8 @@
                                             <label for="total_barang" class="form-label"></label>
                                             <input type="text"
                                                 class="form-control @error('total_barang', 'tambahBarang') is-invalid @enderror"
-                                                id="total_barang" placeholder="total barang" name="total_barang">
+                                                id="total_barang" placeholder="total barang" name="total_barang"
+                                                value="{{ old('total_barang') }}">
                                             @error('total_barang', 'tambahBarang')
                                                 <div id="total_barang" class="form-text" style="color: red;">{{ $message }}
                                                 </div>
@@ -213,7 +215,8 @@
                                                 Karakteristik barang</label>
                                             <textarea
                                                 class="form-control @error('penjelasan_barang', 'tambahBarang') is-invalid @enderror"
-                                                id="penjelasan_barang" rows="3" name="penjelasan_barang"></textarea>
+                                                id="penjelasan_barang" rows="3"
+                                                name="penjelasan_barang">{{ old('penjelasan_barang') }}</textarea>
                                             @error('penjelasan_barang', 'tambahBarang')
                                                 <div id="penjelasan_barang" class="form-text" style="color: red;">
                                                     {{ $message }}
@@ -321,7 +324,7 @@
 
     @can('data user list')
         <!-- user data list -->
-        <section class="py-5" >
+        <section class="py-5">
             <div class="container">
                 <div class="card table-card">
                     <div class="card-header">
@@ -336,6 +339,11 @@
                                     Tambah User
                                 </button>
                             @endcan
+
+                            <!-- Button trigger modal -->
+                            <a href="{{ url('/manage-role') }}" type="button" class="btn btn-info mb-2">
+                                Manage role
+                            </a>
                             <table id="userTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -380,7 +388,7 @@
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control @error('name', 'tambahUser') is-invalid @enderror"
-                                id="name" placeholder="name" name="name">
+                                id="name" placeholder="name" name="name" value="{{ old('name') }}">
                             @error('name', 'tambahUser')
                                 <div class="form-text" style="color: red;">
                                     {{ $message }}
@@ -392,7 +400,7 @@
                             <label for="username" class="form-label">Username</label>
                             <input type="text"
                                 class="form-control @error('username', 'tambahUser') is-invalid @enderror" id="username"
-                                placeholder="username" name="username">
+                                placeholder="username" name="username" value="{{ old('username') }}">
                             @error('username', 'tambahUser')
                                 <div class="form-text" style="color: red;">
                                     {{ $message }}
@@ -404,15 +412,28 @@
                             <label for="password" class="form-label">Password</label>
                             <input type="text"
                                 class="form-control @error('password', 'tambahUser') is-invalid @enderror" id="password"
-                                placeholder="password" name="password">
+                                placeholder="password" name="password" value="{{ old('password') }}">
                             @error('password', 'tambahUser')
                                 <div class="form-text" style="color: red;">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
+                        <select name="role" class="form-select @error('role', 'tambahUser') is-invalid @enderror"
+                            aria-label="Default select example">
+                            <option value="" selected>Pilih role</option>
+                            @foreach ($allRole as $role)
+                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+
+                        @error('role', 'tambahUser')
+                            <div class="form-text" style="color: red;">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer mb-4">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </div>
@@ -448,7 +469,7 @@
                                     <label class="form-label">Nama Barang</label>
                                     <input type="text"
                                         class="form-control @error('nama_barang', 'tambahPinjam') is-invalid @enderror"
-                                        id="namaBarang" name="nama_barang">
+                                        id="namaBarang" name="nama_barang" value="{{ old('nama_barang') }}" readonly>
                                     @error('nama_barang', 'tambahPinjam')
                                         <div id="nama_barang" class="form-text" style="color: red;">
                                             {{ $message }}
@@ -459,7 +480,8 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jumlah Tersedia</label>
-                                    <input type="text" class="form-control" id="availableQty" readonly>
+                                    <input type="text" class="form-control" name="availableQty"
+                                        value="{{ old('availableQty') }}" id="availableQty" readonly>
                                 </div>
                             </div>
                         </div>
@@ -468,7 +490,8 @@
                                 <div class="mb-3">
                                     <label class="form-label">Nama Peminjam</label>
                                     <input type="text" class="form-control" id="borrowerName"
-                                        value="{{ $userSession['username'] }}" name="nama_penanggung_jawab" readonly>
+                                        value="{{ old('username', $userSession['username']) }}"
+                                        name="nama_penanggung_jawab" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -476,7 +499,7 @@
                                     <label class="form-label">Jumlah Pinjam</label>
                                     <input type="number"
                                         class="form-control @error('total_pinjam', 'tambahPinjam') is-invalid @enderror"
-                                        id="borrowQty" name="total_pinjam" min="1">
+                                        id="borrowQty" name="total_pinjam" min="1" value="{{ old('total_pinjam') }}">
                                     @error('total_pinjam', 'tambahPinjam')
                                         <div id="total_pinjam" class="form-text" style="color: red;">
                                             {{ $message }}
@@ -491,7 +514,8 @@
                                     <label class="form-label">Tanggal pinjam</label>
                                     <input type="date"
                                         class="form-control @error('tanggal_pinjam_barang', 'tambahPinjam') is-invalid @enderror"
-                                        id="returnDate" name="tanggal_pinjam_barang">
+                                        id="returnDate" name="tanggal_pinjam_barang"
+                                        value="{{ old('tanggal_pinjam_barang') }}">
                                     @error('tanggal_pinjam_barang', 'tambahPinjam')
                                         <div id="tanggal_pinjam_barang" class="form-text" style="color: red;">
                                             {{ $message }}
@@ -504,7 +528,7 @@
                             <label class="form-label">Keperluan</label>
                             <textarea
                                 class="form-control @error('keperluan_barang', 'tambahPinjam') is-invalid @enderror"
-                                name="keperluan_barang" id="purpose" rows="3"></textarea>
+                                name="keperluan_barang" id="purpose" rows="3">{{ old('keperluan_barang')}}</textarea>
                             @error('keperluan_barang', 'tambahPinjam')
                                 <div id="keperluan_barang" class="form-text" style="color: red;">
                                     {{ $message }}
@@ -729,7 +753,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                                                                                                                                                                        {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -787,7 +811,7 @@
 
         const user = [
             @foreach ($user as $u)
-                                                                                                                                                                            {
+                                                                                                                                                                                                {
                     id: {{ $u['id'] }},
                     username: @json($u['username']),
                     name: @json($u['name']),

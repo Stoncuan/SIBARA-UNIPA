@@ -30,12 +30,14 @@ class UserController extends Controller
         $validasi = $request->validateWithBag('tambahUser', [
             'name' => 'required',
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'role' => 'nullable|required',
         ]);
 
         $name = $validasi['name'];
         $username = $validasi['username'];
         $password = $validasi['password'];
+        $role = $validasi['role'];
 
         $findUser = $this->userService->getUserByUsername($username);
 
@@ -58,7 +60,8 @@ class UserController extends Controller
                 ->with('user', $user)
                 ->with('userSession', $userSession);
         } else {
-            $this->userService->createUser($name, $username, $password);
+            $this->userService->createUser($name, $username, $password, $role);
+            
 
             Session::flash('message', 'Data user berhasil ditambahkan');
             return redirect('/peminjaman-barang#userTable')
@@ -108,8 +111,7 @@ class UserController extends Controller
             'userId' => 'required',
             'name' => 'required',
             'password' => 'required',
-            'permission' => 'nullable',
-            'permission.*' => 'string|exists:permissions,name'
+            'role' => 'nullable|required',
         ]);
 
         $id = $validasi['userId'];
@@ -144,7 +146,163 @@ class UserController extends Controller
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
             ->with('userSession', $userSession);
+    }
 
+    public function showRolePermission()
+    {
+        $userSession = $this->userService->getUserSession();
+
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+
+        $allRole = Role::all();
+        $allPermission = Permission::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+        $userPermission = $USER->getAllPermissions();
+
+        $allRolePermission = Role::with('permissions')->get();
+
+
+        return view('home_peminjaman.role')
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('allRole', $allRole)
+            ->with('userRoles', $userRoles)
+            ->with('allPermission', $allPermission)
+            ->with('userPermission', $userPermission)
+            ->with('allRolePermission', $allRolePermission)
+            ->with('userSession', $userSession);
+    }
+
+    public function createRole(Request $request)
+    {
+        $validasi = $request->validateWithBag('tambahRole', [
+            'role' => 'required|unique:roles,name',
+            'permission' => 'nullable',
+            'permission.*' => 'string|exists:permissions,name'
+        ]);
+
+        $roleName = $validasi['role'];
+
+        $role = Role::create(['name' => $roleName]);
+
+        if ($request->has('permission')) {
+            $role->givePermissionTo($validasi['permission']);
+        }
+
+        $barang = $this->barangService->getAllBarang();
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
+
+        Session::flash('message', 'Role ' . $roleName . ' berhasil ditambahkan');
+        return redirect('/manage-role')
+            ->with('title', 'SIBARA-UNIPA')
+            ->with('barang', $barang)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
+    }
+
+    public function deleteRole($id)
+    {
+        $role = Role::findById($id);
+        $roleName = $role->name;
+        $role->delete();
+
+        $barang = $this->barangService->getAllBarang();
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
+
+        Session::flash('message', 'Role ' . $roleName . ' berhasil dihapus');
+        return redirect('/manage-role')
+            ->with('title', 'SIBARA-UNIPA')
+            ->with('barang', $barang)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
+    }
+
+    public function showEditRole(Request $request, $id)
+    {
+        $roleDetail = Role::with('permissions')->find($id);
+        $userSession = $this->userService->getUserSession();
+
+        $allRole = Role::all();
+        $allPermission = Permission::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+        $userPermission = $USER->getAllPermissions();
+
+        $PermissionByRole = Role::with('permissions')->find($id);
+
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        return view('home_peminjaman.edit_role')
+            ->with('roleDetail', $roleDetail)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('userSession', $userSession)
+            ->with('allRole', $allRole)
+            ->with('allPermission', $allPermission)
+            ->with('userRoles', $userRoles)
+            ->with('PermissionByRole', $PermissionByRole)
+            ->with('userPermission', $userPermission);
+    }
+
+    public function updateRole(Request $request)
+    {
+        $validasi = $request->validate([
+            'id' => 'required',
+            'role' => 'required|nullable',
+            'permission' => 'nullable|required',
+        ]);
+
+        $roleName = $validasi['role'];
+        $id = $validasi['id'];
+
+        $role = Role::findById($id);
+        $role->name = $roleName;
+        $role->save();
+
+        if ($request->has('permission')) {
+            $role->syncPermissions($validasi['permission']);
+        } else {
+            $role->syncPermissions([]); // Hapus semua jika kosong
+        }
+
+        $barang = $this->barangService->getAllBarang();
+        $totalBarang = $this->barangService->totalBarang();
+        $totalBarangTersedia = $this->barangService->totalBarangTersedia();
+        $totalBarangPinjam = $this->pinjamanBarangService->getTotalPinjaman();
+        $user = $this->userService->getAllUser();
+        $userSession = $this->userService->getUserSession();
+
+        Session::flash('message', 'Permission ' . $roleName . ' berhasil diubah');
+        return redirect('/manage-role')
+            ->with('title', 'SIBARA-UNIPA')
+            ->with('barang', $barang)
+            ->with('totalBarang', $totalBarang)
+            ->with('totalBarangTersedia', $totalBarangTersedia)
+            ->with('totalBarangPinjam', $totalBarangPinjam)
+            ->with('user', $user)
+            ->with('userSession', $userSession);
     }
 
     public function showEditUserProfile()

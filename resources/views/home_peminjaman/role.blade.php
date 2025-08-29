@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update User Profile</title>
+    <title>Manage role - SIBARA UNIPA</title>
+
+    <link href="{{ asset('Image') }}/logo.png" rel="icon">
 
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -108,69 +110,115 @@
 
     <section>
         <div class="col-md-6 offset-md-3">
-            <div class="modal-dialog">
-                <div class="modal-content " style="background-color: #EEEEEE; margin-top: 40px;">
-                    <form method="post" action="/edit-user">
-                        @csrf
-                        <div class="modal-content ">
-                            <input hidden type="text" name="userId"
-                                class="form-control @error('userId', 'userEdit') is-invalid @enderror"
-                                value="{{ old('userId', $user['id']) }}">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">User Edit</h1>
-                            </div>
-                            <div class="modal-body m-2">
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Username</label>
-                                    <input readonly type="text"
-                                        class="form-control @error('username', 'userEdit') is-invalid @enderror"
-                                        name="username" id="username" placeholder="username"
-                                        value="{{ old('username', $user['username']) }}">
-                                    @error('username', 'userEdit')
-                                        <div class="form-text" style="color: red;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Nama</label>
-                                    <input type="text"
-                                        class="form-control @error('name', 'userEdit') is-invalid @enderror" name="name"
-                                        id="name" placeholder="name" value="{{ old('name', $user['name']) }}">
-                                    @error('name', 'userEdit')
-                                        <div class="form-text" style="color: red;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Password</label>
-                                    <input type="text"
-                                        class="form-control @error('password', 'userEdit') is-invalid @enderror"
-                                        name="password" id="password" placeholder="password">
-                                    @error('password', 'userEdit')
-                                        <div class="form-text" style="color: red;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <select name="role"
-                                    class="form-select @error('role', 'userEdit') is-invalid @enderror"
-                                    aria-label="Default select example">
-                                    <option value="" selected>Pilih role</option>
-                                    @foreach ($allRole as $role)
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-
-                            </div>
-                            <div class="modal-footer me-3 mb-2">
-                                <a href="{{ url('/peminjaman-barang') }}" class="btn btn-secondary me-2">Kembali</a>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div>
+                <h3 class="text-center mb-4 mt-3">Manage Role & Permission</h3>
             </div>
+            <a class="btn btn-warning mb-2 me-2" href="{{ url('/peminjaman-barang#userTable')}}">
+                Kembali
+            </a>
+            <!-- Button trigger modal -->
+            <button type=" button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#tambahRole">
+                Tambah role
+                </button>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr style="text-align: center;">
+                            <th scope="col">Role name</th>
+                            <th scope="col">permissions</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($allRolePermission as $rolePermission)
+                            <tr>
+                                <td>{{ $rolePermission->name }}</td>
+                                <td>
+                                    @foreach ($rolePermission->permissions as $permission)
+                                        <span class="">{{ $permission->name . "," }}</span>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <a href="{{ url('/edit-role/' . $rolePermission->id) }}"
+                                        class="btn btn-sm btn-primary mb-2">Edit</a>
+
+                                    <form action="/delete-role/{{ $rolePermission->id }}" method="post" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+
+                                    </form>
+
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+                </table>
+
         </div>
     </section>
+
+
+
+    @if ($errors->tambahRole->any())
+        <script>
+            window.onload = function () {
+                var modal = new bootstrap.Modal(document.getElementById('tambahRole'));
+                modal.show();
+            };  
+        </script>
+    @endif
+
+    <!-- Modal -->
+    <div class="modal fade" id="tambahRole" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah role</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/tambah-role">
+                        @csrf
+                        <div class="modal-body: m-2">
+
+                            <div class="mb-4">
+                                <label for="role" class="form-label">Role</label>
+                                <input type="text" name="role" id="role"
+                                    class="form-control @error('role', 'tambahRole') is-invalid @enderror"
+                                    value="{{ old('role') }}">
+
+                                @error('role', 'tambahRole')
+                                    <div class="form-text text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                @foreach ($allPermission as $p)
+                                    <div class="form-check form-check-inline">
+                                        <input
+                                            class="form-check-input @error('permission', 'tambahRole') is-invalid @enderror"
+                                            type="checkbox" name="permission[]" id="permission_{{ $p['id'] }}"
+                                            value="{{ $p['name'] }}">
+                                        <label class="form-check-label"
+                                            for="permission_{{ $p['id'] }}">{{ $p['name'] }}</label>
+                                        @error('permission', 'tambahRole')
+                                            <small>{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 

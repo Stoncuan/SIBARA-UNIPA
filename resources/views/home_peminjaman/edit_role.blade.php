@@ -110,62 +110,45 @@
         <div class="col-md-6 offset-md-3">
             <div class="modal-dialog">
                 <div class="modal-content " style="background-color: #EEEEEE; margin-top: 40px;">
-                    <form method="post" action="/edit-user">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User Profile</h5>
+                    </div>
+                    <form method="post" action="/edit-role">
                         @csrf
-                        <div class="modal-content ">
-                            <input hidden type="text" name="userId"
-                                class="form-control @error('userId', 'userEdit') is-invalid @enderror"
-                                value="{{ old('userId', $user['id']) }}">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">User Edit</h1>
+                        <div class="modal-body: m-2">
+
+                            <input  name="id" value="{{ $PermissionByRole['id'] }}">
+                           
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role</label>
+                                <input type="text" name="role" id="role"
+                                    class="form-control @error('role') is-invalid @enderror"
+                                    value="{{ old('role', $PermissionByRole['name']) }}">
+                                @error('role')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            <div class="modal-body m-2">
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Username</label>
-                                    <input readonly type="text"
-                                        class="form-control @error('username', 'userEdit') is-invalid @enderror"
-                                        name="username" id="username" placeholder="username"
-                                        value="{{ old('username', $user['username']) }}">
-                                    @error('username', 'userEdit')
-                                        <div class="form-text" style="color: red;">{{ $message }}</div>
+
+                            @foreach ($allPermission as $p)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input @error('permission') is-invalid @enderror"
+                                        type="checkbox" name="permission[]" id="permission_{{ $p['id'] }}"
+                                        value="{{ $p['name'] }}" {{ $PermissionByRole->hasPermissionTo($p['name']) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="permission_{{ $p['id'] }}">{{ $p['name'] }}</label>
+                                    @error('permission')
+                                        <small>{{ $message }}</small>
                                     @enderror
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Nama</label>
-                                    <input type="text"
-                                        class="form-control @error('name', 'userEdit') is-invalid @enderror" name="name"
-                                        id="name" placeholder="name" value="{{ old('name', $user['name']) }}">
-                                    @error('name', 'userEdit')
-                                        <div class="form-text" style="color: red;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Password</label>
-                                    <input type="text"
-                                        class="form-control @error('password', 'userEdit') is-invalid @enderror"
-                                        name="password" id="password" placeholder="password">
-                                    @error('password', 'userEdit')
-                                        <div class="form-text" style="color: red;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <select name="role"
-                                    class="form-select @error('role', 'userEdit') is-invalid @enderror"
-                                    aria-label="Default select example">
-                                    <option value="" selected>Pilih role</option>
-                                    @foreach ($allRole as $role)
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-
-                            </div>
-                            <div class="modal-footer me-3 mb-2">
-                                <a href="{{ url('/peminjaman-barang') }}" class="btn btn-secondary me-2">Kembali</a>
+                            @endforeach
+                            <div class="modal-footer">
+                                <a href="{{ url('/manage-role') }}" type="btn btn-primary"
+                                    class="btn btn-secondary me-2">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>

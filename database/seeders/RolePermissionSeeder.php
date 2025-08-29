@@ -25,6 +25,7 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'edit barang']);
         Permission::create(['name' => 'kembalikan barang user']);
         Permission::create(['name' => 'data user list']);
+        Permission::create(['name' => 'manage role']);
 
         $superAdmin->givePermissionTo([
             'tambah user',
@@ -35,6 +36,7 @@ class RolePermissionSeeder extends Seeder
             'edit barang',
             'kembalikan barang user',
             'data user list',
+            'manage role',
         ]);
     }
 }

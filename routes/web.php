@@ -38,6 +38,11 @@ Route::controller(\App\Http\Controllers\UserController::class)
     Route::post('/edit-user-profile', 'updateUserProfile');
     Route::post('/hapus-user/{id}', 'deleteUser');
     Route::post('/tambah-user', 'createUser');
+    Route::get('/manage-role', 'showRolePermission');
+    Route::post('/tambah-role', 'createRole');
+    Route::post('/delete-role/{id}', 'deleteRole');
+    Route::get('/edit-role/{id}', 'showEditRole');
+    Route::post('/edit-role', 'updateRole');
 });
 
 

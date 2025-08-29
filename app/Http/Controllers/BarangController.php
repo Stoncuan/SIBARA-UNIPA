@@ -38,6 +38,12 @@ class BarangController extends Controller
         $pinjamanBarangAll = $this->pinjamanBarangService->getAllPinjaman();
         $data = 0;
 
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
+
 
         return response()->view('home_peminjaman.peminjaman_barang', [
             "title" => "SIBARA-UNIPA",
@@ -50,6 +56,8 @@ class BarangController extends Controller
             "userPinjamBarang" => $userPinjamBarang,
             "pinjamanBarangAll" => $pinjamanBarangAll,
             "data" => $data,
+            "allRole" => $allRole,
+            "userRoles" => $userRoles,
         ]);
     }
 
@@ -85,6 +93,11 @@ class BarangController extends Controller
         $total_barang = $validasiBarang['total_barang'];
         $barang_tersedia = $validasiBarang['total_barang'];
 
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
         $pathGambar = time() . "_" . $gambar_barang->getClientOriginalName();
         $path = 'gambar_barang/' . $pathGambar;
 
@@ -116,6 +129,8 @@ class BarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('userRoles', $userRoles)
+            ->with('allRole', $allRole)
             ->with('userSession', $userSession);
     }
 
@@ -133,7 +148,7 @@ class BarangController extends Controller
         $id = $validasiBarang['id'];
         $nama_barang = $validasiBarang['nama_barang'];
         $penjelasan_barang = $validasiBarang['penjelasan_barang'];
-        $gambar_barang = $validasiBarang['gambar_barang'];
+        $gambar_barang = $request->file('gambar_barang');
         $total_barang = $validasiBarang['total_barang'];
         $barang_tersedia = $validasiBarang['barang_tersedia'];
 
@@ -149,6 +164,8 @@ class BarangController extends Controller
 
             Storage::disk('private')->put($path, file_get_contents($gambar_barang));
             $gambar_barang = $path;
+        } else {
+            $gambar_barang = $dataBarang['gambar_barang'];
         }
 
         $this->barangService->updateBarang(
@@ -167,6 +184,11 @@ class BarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
         Session::flash('message', 'Data barang berhasil di rubah');
         return redirect('/peminjaman-barang#itemsContainer')
             ->with('barang', $barang)
@@ -174,6 +196,8 @@ class BarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('userRoles', $userRoles)
+            ->with('allRole', $allRole)
             ->with('userSession', $userSession);
     }
 
@@ -188,6 +212,11 @@ class BarangController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
+        $allRole = Role::all();
+
+        $USER = Auth::user();
+        $userRoles = $USER->getRoleNames();
+
         Session::flash('message', 'Data barang berhasil dihapus');
         return redirect('/peminjaman-barang#itemsContainer')
             ->with('title', 'SIBARA-UNIPA')
@@ -196,6 +225,8 @@ class BarangController extends Controller
             ->with('totalBarangTersedia', $totalBarangTersedia)
             ->with('totalBarangPinjam', $totalBarangPinjam)
             ->with('user', $user)
+            ->with('userRoles', $userRoles)
+            ->with('allRole', $allRole)
             ->with('userSession', $userSession);
     }
 }
