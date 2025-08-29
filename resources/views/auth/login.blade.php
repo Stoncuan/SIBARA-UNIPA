@@ -595,7 +595,7 @@
         <div class="login-card">
 
             <div class="login-header">
-                <h1>UPA TIK UNIPA</h1>
+                <h1>SIBARA-UNIPA</h1>
                 @if (isset($messageLogin))
                     <div class="row">
                         <div class="alert alert-danger mb-3" style="text-align: center;" role="alert">
@@ -603,7 +603,7 @@
                         </div>
                     </div>
                 @endif
-                <p>Peminjaman barang UPA TIK UNIPA</p>
+                <p>Sistem Informasi Barang Universitas Papua</p>
             </div>
 
             <form method="post" action="/login">

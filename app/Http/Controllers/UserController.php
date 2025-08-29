@@ -61,7 +61,7 @@ class UserController extends Controller
                 ->with('userSession', $userSession);
         } else {
             $this->userService->createUser($name, $username, $password, $role);
-            
+
 
             Session::flash('message', 'Data user berhasil ditambahkan');
             return redirect('/peminjaman-barang#userTable')
@@ -110,7 +110,6 @@ class UserController extends Controller
         $validasi = $request->validateWithBag('userEdit', [
             'userId' => 'required',
             'name' => 'required',
-            'password' => 'required',
             'role' => 'nullable|required',
         ]);
 
@@ -128,14 +127,15 @@ class UserController extends Controller
 
         $USER = User::findOrFail($id);
 
-        if ($request->has('permission')) {
-            $USER->syncPermissions($validasi['permission']);
-        } else {
-            $USER->syncPermissions([]); // Hapus semua jika kosong
+        if ($request->has('role')) {
+            $USER->syncRoles($validasi['role']);
         }
 
-        $this->userService->updateUser($id, $name, $password);
-
+        if (empty($password)) {
+            $this->userService->updateUserNoPassword($id, $name);
+        } else {
+            $this->userService->updateUser($id, $name, $password);
+        }
 
         Session::flash('message', 'Data user ' . $username . ' berhasil diubah');
         return redirect('/peminjaman-barang#userTable')
@@ -338,11 +338,15 @@ class UserController extends Controller
         $user = $this->userService->getAllUser();
         $userSession = $this->userService->getUserSession();
 
-        $this->userService->updateUser($id, $name, $password);
+        if (empty($password)) {
+            $this->userService->updateUserNoPassword($id, $name);
+        } else {
+            $this->userService->updateUser($id, $name, $password);
+        }
 
 
         Session::flash('message', 'Profile anda berhasil diubah');
-        return redirect('/peminjaman-barang#userTable')
+        return redirect('/peminjaman-barang')
             ->with('title', 'SIBARA-UNIPA')
             ->with('barang', $barang)
             ->with('totalBarang', $totalBarang)

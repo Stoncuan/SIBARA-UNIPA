@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update User Profile</title>
+    <title>Edit User Profile - SIBARA UNIPA</title>
+    <link href="{{ asset('Image') }}/logo.png" rel="icon">
 
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -36,7 +37,7 @@
             });
         </script>
     @endif
-    <!-- Header -->
+   <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="row align-items-center">
@@ -47,11 +48,11 @@
                         </div>
                         <div>
                             <h4 class="mb-0">UPA TIK</h4>
-                            <small>Unit Pelaksana Administrasi Teknologi Informasi dan Komunikasi</small>
+                            <small>Unit Penunjang Akademik Teknologi Informasi dan Komunikasi</small>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-end">
+                <div class="col-md-6 text-end mt-2">
                     <div class="d-flex align-items-center justify-content-end">
                         <div class="me-3">
                             <i class="fas fa-user-circle fa-2x"></i>
@@ -97,8 +98,8 @@
             <div class="shape"></div>
         </div>
         <div class="container text-center position-relative" style="z-index: 2;">
-            <h1 class="hero-title">Sistem Peminjaman Barang</h1>
-            <p class="hero-subtitle">Kelola peminjaman barang inventaris dengan mudah dan efisien</p>
+            <h1 class="hero-title">SIBARA-UNIPA</h1>
+            <p class="hero-subtitle">Sistem Informasi Barang Universitas Papua</p>
         </div>
     </section>
 

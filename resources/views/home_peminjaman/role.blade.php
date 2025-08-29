@@ -49,11 +49,11 @@
                         </div>
                         <div>
                             <h4 class="mb-0">UPA TIK</h4>
-                            <small>Unit Pelaksana Administrasi Teknologi Informasi dan Komunikasi</small>
+                            <small>Unit Penunjang Akademik Teknologi Informasi dan Komunikasi</small>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-end">
+                <div class="col-md-6 text-end mt-2">
                     <div class="d-flex align-items-center justify-content-end">
                         <div class="me-3">
                             <i class="fas fa-user-circle fa-2x"></i>
@@ -99,8 +99,8 @@
             <div class="shape"></div>
         </div>
         <div class="container text-center position-relative" style="z-index: 2;">
-            <h1 class="hero-title">Sistem Peminjaman Barang</h1>
-            <p class="hero-subtitle">Kelola peminjaman barang inventaris dengan mudah dan efisien</p>
+            <h1 class="hero-title">SIBARA-UNIPA</h1>
+            <p class="hero-subtitle">Sistem Informasi Barang Universitas Papua</p>
         </div>
     </section>
 

@@ -15,6 +15,8 @@ interface UserService
     
     public function updateUser(int $id, string $name, string $password);
 
+    public function updateUserNoPassword(int $id, string $name);
+
     public function deleteUser(int $id);
 
     public function getUserSession();

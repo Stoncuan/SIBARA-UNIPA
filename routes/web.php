@@ -18,9 +18,11 @@ Route::controller(\App\Http\Controllers\BarangController::class)
     
     Route::get('/peminjaman-barang', 'homeBarang');
 
-    Route::post('/tambah-barang', 'createBarang');
-    Route::post('/hapus-barang/{id}', 'deleteBarang');
-    Route::post('/edit-barang', 'updateBarang');
+    Route::middleware(['permission:tambah barang|hapus barang|edit barang'])->group(function () {
+        Route::post('/tambah-barang', 'createBarang');
+        Route::post('/hapus-barang/{id}', 'deleteBarang');
+        Route::post('/edit-barang', 'updateBarang');
+    });
 });
 
 Route::controller(\App\Http\Controllers\PinjamanBarangController::class)
@@ -31,18 +33,22 @@ Route::controller(\App\Http\Controllers\PinjamanBarangController::class)
 
 Route::controller(\App\Http\Controllers\UserController::class)
 ->middleware('only_member')->group(function () {
-    Route::post('/tambah-user', 'createUser');
-    Route::get('/edit-user/{id}', 'showUpateUser');
-    Route::post('/edit-user', 'updateUser');
+
     Route::get('/edit-user-profile', 'showEditUserProfile');
     Route::post('/edit-user-profile', 'updateUserProfile');
-    Route::post('/hapus-user/{id}', 'deleteUser');
-    Route::post('/tambah-user', 'createUser');
-    Route::get('/manage-role', 'showRolePermission');
-    Route::post('/tambah-role', 'createRole');
-    Route::post('/delete-role/{id}', 'deleteRole');
-    Route::get('/edit-role/{id}', 'showEditRole');
-    Route::post('/edit-role', 'updateRole');
+
+    Route::middleware(['permission:tambah user|hapus user|edit user|manage role'])->group(function () {
+        Route::post('/tambah-user', 'createUser');
+        Route::get('/edit-user/{id}', 'showUpateUser');
+        Route::post('/edit-user', 'updateUser');
+        Route::post('/hapus-user/{id}', 'deleteUser');
+        Route::post('/tambah-user', 'createUser');
+        Route::get('/manage-role', 'showRolePermission');
+        Route::post('/tambah-role', 'createRole');
+        Route::post('/delete-role/{id}', 'deleteRole');
+        Route::get('/edit-role/{id}', 'showEditRole');
+        Route::post('/edit-role', 'updateRole');
+    });
 });
 
 

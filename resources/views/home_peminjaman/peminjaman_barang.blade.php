@@ -49,7 +49,7 @@
                         </div>
                         <div>
                             <h4 class="mb-0">UPA TIK</h4>
-                            <small>Unit Pelaksana Administrasi Teknologi Informasi dan Komunikasi</small>
+                            <small>Unit Penunjang Akademik Teknologi Informasi dan Komunikasi</small>
                         </div>
                     </div>
                 </div>
@@ -99,8 +99,8 @@
             <div class="shape"></div>
         </div>
         <div class="container text-center position-relative" style="z-index: 2;">
-            <h1 class="hero-title">Sistem Peminjaman Barang</h1>
-            <p class="hero-subtitle">Kelola peminjaman barang inventaris dengan mudah dan efisien</p>
+            <h1 class="hero-title">SIBARA-UNIPA</h1>
+            <p class="hero-subtitle">Sistem Informasi Barang Universitas Papua</p>
         </div>
     </section>
 
@@ -340,10 +340,12 @@
                                 </button>
                             @endcan
 
-                            <!-- Button trigger modal -->
-                            <a href="{{ url('/manage-role') }}" type="button" class="btn btn-info mb-2">
-                                Manage role
-                            </a>
+                            @can('manage role')
+                                <!-- Button trigger modal -->
+                                <a href="{{ url('/manage-role') }}" type="button" class="btn btn-info mb-2">
+                                    Manage role
+                                </a>
+                            @endcan
                             <table id="userTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -753,7 +755,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                                                                                                                            {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -811,7 +813,7 @@
 
         const user = [
             @foreach ($user as $u)
-                                                                                                                                                                                                {
+                                                                                                                                                                                                    {
                     id: {{ $u['id'] }},
                     username: @json($u['username']),
                     name: @json($u['name']),

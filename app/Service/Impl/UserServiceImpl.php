@@ -47,6 +47,13 @@ class UserServiceImpl implements UserService
         $user->save();
     }
 
+    public function updateUserNoPassword(int $id, string $name){
+        $user = User::query()->find($id);
+        $user->name = $name;
+
+        $user->save();
+    }
+
     public function deleteUser(int $id){
         $user = User::query()->find($id);
 
