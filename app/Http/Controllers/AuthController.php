@@ -22,11 +22,11 @@ class AuthController extends Controller
 
     public function doLogin(Request $request){
         $validasiLogin = $request->validate([
-            'username' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $username = $validasiLogin['username'];
+        $username = $validasiLogin['email'];
         $password = $validasiLogin['password'];
 
         if($this->authService->login($username, $password)){

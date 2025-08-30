@@ -609,10 +609,10 @@
             <form method="post" action="/login">
                 @csrf
                 <div class="form-group">
-                    <input type="text" id="email" class="form-input @error('username') is-invalid @enderror"
-                        placeholder="Enter your username" name="username">
+                    <input type="text" id="email" class="form-input @error('email') is-invalid @enderror"
+                        placeholder="Enter your email" name="email">
                     <i class="fas fa-envelope input-icon"></i>
-                    @error('username')
+                    @error('email')
                         <div id="email" class="form-text" style="color: red;">{{ $message }}</div>
                     @enderror
                 </div>
