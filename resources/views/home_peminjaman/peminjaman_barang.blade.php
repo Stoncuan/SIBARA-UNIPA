@@ -426,6 +426,7 @@
                             aria-label="Default select example">
                             <option value="" selected>Pilih role</option>
                             @foreach ($allRole as $role)
+                            @continue(in_array($role->name, ['superAdmin']))
                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                             @endforeach
                         </select>
