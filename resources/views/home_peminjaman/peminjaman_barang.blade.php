@@ -351,6 +351,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Username</th>
+                                        <th>Role</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -820,6 +821,7 @@
                     username: @json($u['username']),
                     name: @json($u['name']),
                     created: @json($u['created_at']),
+                    role: @json($u->getRoleNames()->first() ?? 'No Role'),
                     statusClass: "warning",
                 },
             @endforeach
@@ -1020,6 +1022,12 @@
                         },
                     },
                     { data: "username" },
+                    { data: "role",
+                        render: function (data, type, row) {
+                            return `<span class="badge bg-primary">${data}</span>`;
+                        },
+                     },
+                    
 
                     {
                         data: null,
@@ -1265,6 +1273,7 @@
                         <p><strong>ID:</strong> ${item.id}</p>
                         <p><strong>Username:</strong> ${item.username}</p>
                         <p><strong>Name:</strong> ${item.name}</p>
+                        <p><strong>Role:</strong> ${item.role}</p>
                         <p><strong>Created at</strong> ${item.created}</p>
                     </div>
                 `,
