@@ -755,7 +755,7 @@
     <script>// Sample data
         const items = [
             @foreach ($barang as $b)
-                                                                                                                                                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                                                                                                                                                {
                     id: {{ $b['id'] }},
                     name: @json($b['nama_barang']),
                     description: @json($b['penjelasan_barang']),
@@ -798,6 +798,8 @@
                 itemName: @json($pinjamAll['nama_barang']),
                 borrower: @json($pinjamAll['nama_penanggung_jawab']),
                 borrowDate: @json($pinjamAll['tanggal_pinjam_barang']),
+                id_barang: {{ $pinjamAll['id_barang'] }},
+                total_pinjam: @json($pinjamAll['total_pinjam']),
                 keperluan: @json($pinjamAll['keperluan_barang']),
                 returnDate: @json($pinjamAll['tanggal_barang_kembali'] ?? 'Belum Kembali'),
                 status: @json($pinjamAll['status_barang']),
@@ -813,7 +815,7 @@
 
         const user = [
             @foreach ($user as $u)
-                                                                                                                                                                                                    {
+                                                                                                                                                                                                        {
                     id: {{ $u['id'] }},
                     username: @json($u['username']),
                     name: @json($u['name']),
@@ -984,9 +986,14 @@
                                 row.status === "Terlambat"
                             ) {
                                 buttons += `@can('kembalikan barang user')
-                                    <button class="btn btn-sm btn-success me-1" onclick="adminReturnItem(${row.id})">
-                                                   <i class="fas fa-check me-1"></i>Kembalikan
-                                                </button>
+                                        <form method="POST" action="/kembalikan-barang/${row.id}" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id_barang" value="${row.id_barang}">
+                                                <input type="hidden" name="total_pinjam" value="${row.total_pinjam}">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                               <i class="fas fa-undo me-1"></i>Kembalikan
+                                            </button>
+                                    </form>
                                 @endcan`;
                             }
                             buttons += `<button class="btn btn-sm btn-info" onclick="viewDetails(${row.id})">
